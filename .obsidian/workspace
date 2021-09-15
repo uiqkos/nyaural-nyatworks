@@ -1,0 +1,118 @@
+{
+  "main": {
+    "id": "9b0401ea2a7ac66e",
+    "type": "split",
+    "children": [
+      {
+        "id": "f5c40f9ec8dce04f",
+        "type": "leaf",
+        "state": {
+          "type": "markdown",
+          "state": {
+            "file": "0. Выбор темы.md",
+            "mode": "source"
+          }
+        },
+        "group": "3cf6c7533bef40a8"
+      },
+      {
+        "id": "5980df1c6baf72bc",
+        "type": "leaf",
+        "state": {
+          "type": "markdown",
+          "state": {
+            "file": "0. Выбор темы.md",
+            "mode": "preview"
+          }
+        },
+        "group": "3cf6c7533bef40a8"
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "1ff215ba8c5e67dc",
+    "type": "split",
+    "children": [
+      {
+        "id": "050cd366591478f9",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "a264c91719d0e8aa",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {}
+            }
+          },
+          {
+            "id": "b9e20f37c46c2bd1",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "right": {
+    "id": "57aeaf6518badcd2",
+    "type": "split",
+    "children": [
+      {
+        "id": "72ddd4ff3dbed1df",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "f55df2470085cf7f",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "0. Выбор темы.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              }
+            }
+          },
+          {
+            "id": "183db92fea376d04",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "active": "f5c40f9ec8dce04f",
+  "lastOpenFiles": [
+    "0. Выбор темы.md",
+    "Без названия.md"
+  ]
+}
