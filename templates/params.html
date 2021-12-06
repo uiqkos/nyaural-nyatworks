@@ -1,0 +1,191 @@
+<div class="accordion accordion-flush" id="accordionFlushExample">
+  <div class="accordion-item">
+    <h2 class="accordion-header" id="flush-headingOne">
+      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+              data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
+        Настройки анализатора
+      </button>
+    </h2>
+
+    <div id="flush-collapseOne" class="accordion-collapse collapse" aria-labelledby="flush-headingOne"
+         data-bs-parent="#accordionFlushExample">
+      <div class="accordion-body">
+
+        <div class="row align-items-start">
+          <div class="col" id="group1">
+            <h5>Препроцессор</h5>
+
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="group1" id="flexRadioDefault1">
+              <label class="form-check-label" for="flexRadioDefault1">
+                Default
+                <span class="badge bg-success">98%</span>
+                <span
+                  data-bs-toggle="tooltip"
+                  data-bs-html="true"
+                  data-bs-placement="top"
+                  title="
+                    cleaner: all</br>
+                    stopwords remover: true</br>
+                    stemmer: snowball</br>
+                    lemmatizer: true</br>
+                    tokenizer.pad: true">
+                  <a href="#">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                         class="bi bi-info-circle" viewBox="0 0 16 16">
+                      <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"></path>
+                      <path
+                        d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533L8.93 6.588zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0z"></path>
+                    </svg>
+                  </a>
+                </span>
+              </label>
+            </div>
+
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="group1" id="flexRadioDefault2">
+              <label class="form-check-label" for="flexRadioDefault2">
+                Simple
+                <span class="badge bg-warning">64%</span>
+                <span
+                  data-bs-toggle="tooltip"
+                  data-bs-html="true"
+                  data-bs-placement="top"
+                  title="
+                    cleaner: numbers</br>
+                    stopwords remover: true</br>
+                    stemmer: snowball</br>
+                    lemmatizer: false">
+                  <a href="#">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                         class="bi bi-info-circle" viewBox="0 0 16 16">
+                      <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"></path>
+                      <path
+                        d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533L8.93 6.588zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0z"></path>
+                    </svg>
+                  </a>
+                </span>
+              </label>
+            </div>
+          </div>
+
+          <div class="col" id="group2">
+
+            <h5>Модель</h5>
+
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="group2" id="flexRadioDefault3">
+              <label class="form-check-label" for="flexRadioDefault3">
+                Heavy CNN
+                <span class="badge bg-success">94%</span>
+                <span
+                  data-bs-toggle="tooltip"
+                  data-bs-html="true"
+                  data-bs-placement="top"
+                  title="
+                    conv layers: 3</br>
+                    dense layers: 3</br>
+                    architecture: CNN">
+                  <a href="#">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                         class="bi bi-info-circle" viewBox="0 0 16 16">
+                      <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"></path>
+                      <path
+                        d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533L8.93 6.588zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0z"></path>
+                    </svg>
+                  </a>
+                </span>
+              </label>
+            </div>
+
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="group2" id="flexRadioDefault4">
+              <label class="form-check-label" for="flexRadioDefault4">
+                Light CNN
+                <span class="badge bg-success">91%</span>
+                <span
+                  data-bs-toggle="tooltip"
+                  data-bs-html="true"
+                  data-bs-placement="top"
+                  title="
+                    conv layers: 2</br>
+                    dense layers: 1</br>
+                    architecture: CNN">
+                  <a href="#">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                         class="bi bi-info-circle" viewBox="0 0 16 16">
+                      <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"></path>
+                      <path
+                        d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533L8.93 6.588zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0z"></path>
+                    </svg>
+                  </a>
+                </span>
+              </label>
+            </div>
+
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="group2" id="flexRadioDefault5">
+              <label class="form-check-label" for="flexRadioDefault5">
+                Heavy MLP
+                <span class="badge bg-warning">87%</span>
+                <span
+                  data-bs-toggle="tooltip"
+                  data-bs-html="true"
+                  data-bs-placement="top"
+                  title="
+                    hidden layers: 6</br>
+                    architecture: MLP</br>
+                    dropout: 0.5">
+                  <a href="#">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                         class="bi bi-info-circle" viewBox="0 0 16 16">
+                      <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"></path>
+                      <path
+                        d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533L8.93 6.588zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0z"></path>
+                    </svg>
+                  </a>
+                </span>
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="accordion-item">
+    <h2 class="accordion-header" id="flush-headingTwo">
+      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+              data-bs-target="#flush-collapseTwo" aria-expanded="false" aria-controls="flush-collapseTwo">
+        Предмет анализа
+      </button>
+    </h2>
+
+    <div id="flush-collapseTwo" class="accordion-collapse collapse" aria-labelledby="flush-headingTwo"
+         data-bs-parent="#accordionFlushExample">
+      <div class="accordion-body">
+        <div class="form-check">
+          <input class="form-check-input" type="checkbox" value="" id="checkbox1" checked>
+          <label class="form-check-label" for="checkbox1">
+            Токсичность
+          </label>
+        </div>
+
+        <div class="form-check">
+          <input class="form-check-input" type="checkbox" value="" id="checkbox2" checked>
+          <label class="form-check-label" for="checkbox2">
+            Саркастичность
+          </label>
+        </div>
+
+        <div class="form-check">
+          <input class="form-check-input" type="checkbox" value="" id="checkbox3" checked>
+          <label class="form-check-label" for="checkbox3">
+            Эмоциональность
+          </label>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>

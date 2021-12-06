@@ -1,6 +1,6 @@
 import unittest
 
-from preprocessing.transformers import Cleaner, Lemmatizer, StopWordsRemover, Stemmer
+from transformers import Cleaner, Lemmatizer, StopWordsRemover, Stemmer
 
 
 class TestTransformers(unittest.TestCase):
@@ -13,23 +13,23 @@ class TestTransformers(unittest.TestCase):
         self.texts = [self.ip, self.punctuation, self.emails, self.addresses, self.dates]
 
     def test_Cleaner(self):
-        cleaner = Cleaner(generator=False)
+        cleaner = Cleaner()
         self.assertEqual(
             cleaner.transform(self.texts),
             ['Hello its ', 'Hello its me', 'Hi ', ' is good for you', ' or  or ']
         )
 
     def test_Lemmatizer(self):
-        lemmatizer = Lemmatizer(generator=False)
+        lemmatizer = Lemmatizer()
 
         self.assertEqual(
             lemmatizer.transform(['its am the cars cows'.split()]),
-            [['it', 'am', 'the', 'better', 'car', 'cow']]
+            [['it', 'am', 'the', 'car', 'cow']]
         )
 
     def test_Stemmer(self):
         # todo check different lemmatizers
-        stemmer = Stemmer(generator=False)
+        stemmer = Stemmer()
 
         self.assertEqual(
             stemmer.transform(
@@ -39,7 +39,7 @@ class TestTransformers(unittest.TestCase):
         )
 
     def test_StopWordsRemover(self):
-        stopwordsremover = StopWordsRemover(generator=False)
+        stopwordsremover = StopWordsRemover()
 
         self.assertEqual(
             stopwordsremover.transform(["Nick likes to play football, however he is not too fond of tennis.".split()]),

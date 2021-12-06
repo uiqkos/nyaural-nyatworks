@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <div class="container py-4">
+    <div class="p-5 mb-4 bg-light rounded-3">
+      <div class="container-fluid py-5">
+        <h1 class="display-5 fw-bold">Nyaural nyatworks</h1>
+        <p class="col-md-8 fs-4">Анализируйте тональность, эмоциональность и токсичность текстов. Импортируйте данные
+          из социальных сетей. Просматривайте характеристики моделей и историю обучения.</p>
+        <a href="/predict" class="btn btn-outline-dark btn-lg" type="button">
+          Провести анализ
+        </a>
+      </div>
+    </div>
+
+    <div class="row align-items-md-stretch">
+      <div class="col-md-6">
+        <div class="h-100 p-5 text-white bg-success rounded-3">
+          <h2>Отчеты</h2>
+          <p>Просматривайте отчеты по моделям, </br> препроцессорам и датасетам</p>
+          <a href="/reports" class="btn btn-outline-light" type="button">
+            Просмотреть отчеты
+          </a>
+        </div>
+      </div>
+
+      <div class="col-md-6">
+        <div class="h-100 p-5 text-white bg-primary rounded-3">
+          <h2>Рейтинг</h2>
+          <p>Ставте лайки и дизлайки, на основе которых формируется рейтинг моделей.</p>
+          <a href="/rating" class="btn btn-outline-light" type="button">
+            Просмотреть рейтинг
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
