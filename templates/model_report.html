@@ -20,48 +20,62 @@
   {#      <dd class="col-sm-9">{{ metric.value }}</dd>#}
   {#    {% endfor %}#}
   {#  </dl>#}
-  <p class="display-1">{{ title }}</p>
   <div style="height: 30px"></div>
-  <div class="row" tabindex="0" >
+  <div class="row" tabindex="0">
     <div class="col-3">
       <nav id="navbar-example3" class="navbar navbar-light bg-light flex-column align-items-stretch p-3">
         <a class="navbar-brand" href="#">Оглавление</a>
         <nav class="nav nav-pills flex-column">
-{#          {% for name, item in items %}#}
-            <a class="nav-link" href="#desc">Описание</a>
-            <a class="nav-link" href="#arch">Архитектура</a>
-            <a class="nav-link" href="#history">История обучения</a>
-            <a class="nav-link" href="#metrics">Значения метрик</a>
-{#          {% endfor %}#}
+          {#          {% for name, item in items %}#}
+          <a class="nav-link" href="#desc">Описание</a>
+          <a class="nav-link" href="#arch">Архитектура</a>
+          <a class="nav-link" href="#history">История обучения</a>
+          <a class="nav-link" href="#metrics">Значения метрик</a>
+          {#          {% endfor %}#}
         </nav>
       </nav>
     </div>
-    <div class="col" style="overflow-y: scroll; height: 85vh; position: relative" data-bs-spy="scroll" data-bs-target="#navbar-example3">
+    <div class="col" style="overflow-y: scroll; height: 85vh; position: relative" data-bs-spy="scroll"
+         data-bs-target="#navbar-example3">
+      <p class="display-3">{{ model_name }}</p>
       <div data-bs-spy="scroll" data-bs-target="#navbar-example3" data-bs-offset="0" tabindex="0">
-{#        {% for name, item in items %}#}
-          <h4 id="desc">Описание</h4>
-            <p>{{ desc }}</p>
-          <h4 id="arch">Архитектура</h4>
-          <p>{{ arch_desc }}</p>
-          <div style="text-align: center">
-            <div class="HoverDiv">
-              <img src="data:image/gif;base64,{{ arch_img }}" height="65%" width="65%" >
-            </div>
-            <p><i>{{ arch_img_desc }}</i></p>
-          </div>
-          <h4 id="history">История обучения</h4>
-          <h4 id="metrics">Значения метрик</h4>
-            {% for metric_name, metric_value in metrics %}
-              <p>{{ metric_name }}: {{ metric_value }}</p>
-            {% endfor %}
+        {#        {% for name, item in items %}#}
+        <h4 id="desc">Описание</h4>
+        <p>{{ desc }}</p>
+        <h4 id="arch">Архитектура</h4>
+        <p>{{ arch_desc }}</p>
+        <div style="text-align: center">
+          <img src="data:image/gif;base64,{{ arch_img }}" height="65%" width="65%">
+          <p><i>{{ arch_img_desc }}</i></p>
+        </div>
+        <h4 id="history">История обучения</h4>
+        <h6 style="padding-top: 20px">Параметры обучения</h6>
+        <ul class="list-group list-group-flush">
+          {% for name, value in history_params.items() %}
+            <li class="list-group-item">{{ name }}
+              <span class="badge bg-primary">{{ value }}</span>
+            </li>
+          {% endfor %}
+        </ul>
+        <div style="text-align: center">
+          <img src="data:image/gif;base64,{{ history_img }}" height="65%" width="65%">
+        </div>
 
-{#          {% for value in item %}#}
-{#            {% if value.img is not none %}#}
-{#            {% else %}#}
-{#              <p>{{ value.text }}</p>#}
-{#            {% endif %}#}
-{#          {% endfor %}#}
-{#        {% endfor %}#}
+        <h4 id="metrics">Значения метрик</h4>
+        <ul class="list-group list-group-flush">
+
+          {% for metric_name, metric_value in metrics.items() %}
+            <li class="list-group-item">
+              {% if metrics_colors is not none %}
+                <p>{{ metric_name }} <span class="badge bg-{{ metrics_colors[metric_name] }}">{{ metric_value }}</span>
+                </p>
+              {% else %}
+                <p>{{ metric_name }} <span class="badge bg-primary">{{ metric_value }}</span></p>
+              {% endif %}
+            </li>
+          {% endfor %}
+        </ul>
+
       </div>
     </div>
   </div>
