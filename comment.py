@@ -1,10 +1,5 @@
-import abc
-from abc import abstractmethod
 from dataclasses import dataclass, field
 from typing import List
-
-from yattag import Doc
-from ml.toxic import ToxicPrediction
 
 
 # class Comment(abc.ABC):
