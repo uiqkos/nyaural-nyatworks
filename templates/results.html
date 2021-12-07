@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block content %}
+  <div class="container search" id="mainContainer">
+    <form action="/results" class="input-group mb-3">
+      <input
+        type="text"
+        class="form-control"
+        name="name"
+        placeholder="Username"
+        aria-label="Username"
+        aria-describedby="basic-addon1">
+
+      <input type="submit" class="input-group-text" value="go">
+    </form>
+  </div>
+
+  <script type="text/javascript">
+
+      function commentToHTML(comment) {
+          return '' +
+              '<div class="d-flex w-100 justify-content-between">' +
+              '<p class="mb-1">' + comment.author + '</p>' + '<p>' + comment.emoji + '</p>' +
+              '</div>' +
+              '<h4 class="mb-1">' + comment.text + '</h4>'
+      }
+
+      function expand(comment, is_nested) {
+          let html_text = ''
+
+          if (comment.comments.length === 0) {
+              return commentToHTML(comment)
+          }
+
+          if (is_nested) {
+              html_text += '<div class="list-group nested">'
+          } else {
+              html_text += '<div class="list-group">'
+          }
+
+          html_text += commentToHTML(comment)
+
+          comment.comments.forEach(function (nested) {
+              html_text += '<div class="list-group-item">'
+              html_text += expand(nested, true)
+              html_text += '</div>'
+          })
+
+          html_text += '</div>'
+          return html_text
+      }
+
+      mainContainer = document.getElementById('mainContainer')
+      let expanded = expand({{ comments | safe }}, false)
+      mainContainer.innerHTML += '<div class="list-group">'
+      mainContainer.innerHTML += expanded
+      mainContainer.innerHTML += '</div>'
+  </script>
+{% endblock %}

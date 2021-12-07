@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <div class="container search">
+    <form action="/results" class="input-group mb-3">
+      <input
+        type="text"
+        class="form-control"
+        name="name"
+        placeholder="Username"
+        aria-label="Username"
+        aria-describedby="basic-addon1"
+      >
+
+      <span class="input-group-text">
+        <input type="submit" value="go">
+      </span>
+    </form>
+
+    {% include "params.html" %}
+
+  </div>
+{% endblock %}
