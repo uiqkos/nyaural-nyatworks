@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <ul class="list-group list-group-flush">
+    {% for report in reports %}
+      <li class="list-group-item">
+        <a href="/report/{{ report.title }}">{{ report.title }}</a>
+        {% for tag in report.tags %}
+          <span class="badge bg-{{ tag.color }}">{{ tag.name }}</span>
+        {% endfor %}
+      </li>
+    {% endfor %}
+  </ul>
+{% endblock %}

@@ -2,80 +2,64 @@
 
 {% block content %}
 
-  {#  <h1 class="display-3">{{ model.name }}</h1>#}
-  {#  <div class="card">#}
-  {#    <div class="card-header">#}
-  {#      Описание#}
-  {#    </div>#}
-  {#    <div class="card-body">#}
-  {#      <blockquote class="blockquote mb-0">#}
-  {#        <p>{{ model.description }}</p>#}
-  {#      </blockquote>#}
-  {#    </div>#}
-  {#  </div>#}
-  {##}
-  {#  <dl class="row">#}
-  {#    {% for metric in metrics %}#}
-  {#      <dt class="col-sm-3">{{ metric.name }}</dt>#}
-  {#      <dd class="col-sm-9">{{ metric.value }}</dd>#}
-  {#    {% endfor %}#}
-  {#  </dl>#}
   <div style="height: 30px"></div>
-  <div class="row" tabindex="0">
+  <div class="row">
     <div class="col-3">
-      <nav id="navbar-example3" class="navbar navbar-light bg-light flex-column align-items-stretch p-3">
-        <a class="navbar-brand" href="#">Оглавление</a>
+      <nav id="navbar" class="navbar navbar-light bg-light flex-column align-items-stretch p-3">
+        <a class="navbar-brand">Оглавление</a>
         <nav class="nav nav-pills flex-column">
-          {#          {% for name, item in items %}#}
-          <a class="nav-link" href="#desc">Описание</a>
-          <a class="nav-link" href="#arch">Архитектура</a>
-          <a class="nav-link" href="#history">История обучения</a>
-          <a class="nav-link" href="#metrics">Значения метрик</a>
-          {#          {% endfor %}#}
+          {% for chapter in chapters %}
+            <a class="nav-link" href="#{{ chapter.header.replace(' ', '-') }}">{{ chapter.header }}</a>
+          {% endfor %}
         </nav>
       </nav>
     </div>
-    <div class="col" style="overflow-y: scroll; height: 85vh; position: relative" data-bs-spy="scroll"
-         data-bs-target="#navbar-example3">
-      <p class="display-3">{{ model_name }}</p>
-      <div data-bs-spy="scroll" data-bs-target="#navbar-example3" data-bs-offset="0" tabindex="0">
-        {#        {% for name, item in items %}#}
-        <h4 id="desc">Описание</h4>
-        <p>{{ desc }}</p>
-        <h4 id="arch">Архитектура</h4>
-        <p>{{ arch_desc }}</p>
-        <div style="text-align: center">
-          <img src="data:image/gif;base64,{{ arch_img }}" height="65%" width="65%">
-          <p><i>{{ arch_img_desc }}</i></p>
-        </div>
-        <h4 id="history">История обучения</h4>
-        <h6 style="padding-top: 20px">Параметры обучения</h6>
-        <ul class="list-group list-group-flush">
-          {% for name, value in history_params.items() %}
-            <li class="list-group-item">{{ name }}
-              <span class="badge bg-primary">{{ value }}</span>
-            </li>
-          {% endfor %}
-        </ul>
-        <div style="text-align: center">
-          <img src="data:image/gif;base64,{{ history_img }}" height="65%" width="65%">
-        </div>
+    <div class="col">
+      <div style="overflow-y: scroll; height: 85vh; position: relative" data-bs-spy="scroll"
+           data-bs-target="#navbar">
 
-        <h4 id="metrics">Значения метрик</h4>
-        <ul class="list-group list-group-flush">
+        <p class="display-3" id="title">{{ title }}</p>
+        {% for tag in tags %}
+          <span class="badge bg-{{ tag.color }}">{{ tag.name }}</span>
+        {% endfor %}
+        <span class="badge bg-secondary ">{{ date.strftime('%Y-%m-%d') }}</span>
 
-          {% for metric_name, metric_value in metrics.items() %}
-            <li class="list-group-item">
-              {% if metrics_colors is not none %}
-                <p>{{ metric_name }} <span class="badge bg-{{ metrics_colors[metric_name] }}">{{ metric_value }}</span>
-                </p>
+        <hr class="divider">
+
+        <div data-bs-spy="scroll" data-bs-target="#navbar" data-bs-offset="0" tabindex="0">
+          {% for chapter in chapters %}
+            <h4 id="{{ chapter.header.replace(' ', '-') }}">{{ chapter.header }}</h4>
+
+            {% for item in chapter.content %}
+              {% if item.img is not none %}
+                <div style="text-align: center">
+                  <img src="data:image/gif;base64,{{ item.img }}" height="65%" width="65%">
+                  <p><i>{{ item.text }}</i></p>
+                </div>
+
+              {% elif item.table is not none %}
+                <h5 style="padding-top: 20px">{{ item.text }}</h5>
+                <ul class="list-group list-group-flush">
+                  {% for key, value in item.table.items() %}
+                    <li class="list-group-item">{{ key }}
+
+                      {% if value.color is defined %}
+                        <span class="badge bg-{{ value.color }}">{{ value.value }}</span>
+                      {% else %}
+                        <span class="badge bg-primary">{{ value }}</span>
+                      {% endif %}
+
+                    </li>
+                  {% endfor %}
+                </ul>
+
               {% else %}
-                <p>{{ metric_name }} <span class="badge bg-primary">{{ metric_value }}</span></p>
-              {% endif %}
-            </li>
-          {% endfor %}
-        </ul>
+                <p>{{ item.text }}</p>
 
+              {% endif %}
+            {% endfor %}
+          {% endfor %}
+        </div>
       </div>
     </div>
   </div>
