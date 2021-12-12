@@ -1,0 +1,43 @@
+<div class="text-center">
+  <div class="logo-box">
+    <h1 class="display-1 nya-text-header">
+      <span class="nya" id="nya1"></span>
+      <span class="nya" id="nya2"></span><span id="cursor" style="color: #5A189A">|</span>
+    </h1>
+  </div>
+</div>
+
+<script>
+    let nya1Source = 'Nyaural';
+    let nya2Source = 'nyatworks'
+
+    let nya1 = document.getElementById('nya1')
+    let nya2 = document.getElementById('nya2')
+    let cursor = document.getElementById('cursor')
+
+    setInterval(function () {
+        if (cursor.style.visibility === 'hidden')
+            cursor.style.visibility = 'visible';
+        else
+            cursor.style.visibility = 'hidden';
+    }, 500)
+
+
+    async function main() {
+        for (let i = 0; i < nya1Source.length; i++) {
+            nya1.innerHTML += nya1Source[i]
+            await new Promise(r => setTimeout(r, Math.random() * (400 - 100) + 100))
+        }
+        nya1.classList.add('nya-decoration-lg-1')
+
+        for (let i = 0; i < nya2Source.length; i++) {
+            nya2.innerHTML += nya2Source[i]
+            await new Promise(r => setTimeout(r, Math.random() * (400 - 100) + 100))
+
+        }
+        nya2.classList.add('nya-decoration-lg-1')
+    }
+
+    main();
+
+</script>
