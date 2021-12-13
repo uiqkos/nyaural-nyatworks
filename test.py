@@ -196,6 +196,6 @@ from tensorflow.keras.models import load_model
 # preprocessor2.save()
 # model2.save()
 
-from sqlite3 import connect
+#%%
+from report import Model
 
-con = connect('')

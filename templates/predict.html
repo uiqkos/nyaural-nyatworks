@@ -2,11 +2,11 @@
 
 {% block content %}
   <div class="container search" style="position: relative;">
-    <form>
+    <form action="/results">
       <div class="row">
         <div class="col-md-3 mb-3">
-          <select id="inputState" class="form-control nya-a-2 nya-remove-shadow text-center">
-            <option selected>Ручной ввод текста</option>
+          <select id="inputState" class="form-control nya-a-2 nya-remove-shadow text-center" name="inputState">
+            <option selected>ручной ввод текста</option>
             <option>vk</option>
             <option>twitter</option>
             <option>reddit</option>
@@ -17,15 +17,15 @@
         <div class="col">
           <div class="input-group mb-3">
             <input type="text" class="form-control nya-remove-shadow" placeholder="" aria-label=""
-                   aria-describedby="basic-addon2" style="border-bottom: 1px solid black; border-radius: 0">
+                   aria-describedby="basic-addon2" style="border-bottom: 1px solid black; border-radius: 0" name="text">
           </div>
         </div>
         <div class="col-md-3">
-          <button class="btn nya-remove-shadow nya-a-2" type="button">Провести анализ
+          <button class="btn nya-remove-shadow nya-a-2" type="submit" >провести анализ
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                  class="bi bi-arrow-right" viewBox="0 0 16 16">
               <path fill-rule="evenodd"
-                    d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z"/>
+                    d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z"></path>
             </svg>
           </button>
         </div>
@@ -33,28 +33,11 @@
     </form>
   </div>
 
-  <h3 style="padding-top: 30px ">Настройка анализатора</h3>
+  <h4 class="nya-text" style="padding-top: 30px">Настройка анализатора</h4>
+
+{#  <div style="padding-top: 30px"></div>#}
 
   {% include "params.html" %}
 
 {% endblock %}
 
-
-
-  <p>
-    <a class="btn btn-primary" data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false"
-       aria-controls="collapseExample">
-      Ссылка с href
-    </a>
-    <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample"
-            aria-expanded="false" aria-controls="collapseExample">
-      Кнопка с data-target
-    </button>
-  </p>
-
-  <div class="collapse" id="collapseExample">
-    <div class="card card-body">
-      Некоторый заполнитель для компонента сворачивания. Эта панель по умолчанию скрыта, но открывается, когда
-      пользователь активирует соответствующий триггер.
-    </div>
-  </div>

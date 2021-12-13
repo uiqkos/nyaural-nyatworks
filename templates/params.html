@@ -1,30 +1,46 @@
-<div class="accordion accordion-flush" id="main-flush">
-  {% for group in groups %}
-    <div class="accordion-item">
-      <h2 class="accordion-header" id="toxic-flush-heading">
-        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                data-bs-target="#{{ group.name }}-flush-collapse" aria-expanded="false" aria-controls="{{ group.name }}-flush-collapse">
-          {{ group.header }}
-        </button>
-      </h2>
+{#<div class="accordion accordion-flush" id="main-flush">#}
+{% for group in groups %}
+  <div>
+    <a
+      class="btn nya-remove-shadow nya-a-2 nya-text"
+      data-bs-toggle="collapse"
+      href="#{{ group.name }}"
+      role="button"
+      aria-expanded="false"
+      aria-controls="{{ group.name }}">
+      {{ group.header }}
+    </a>
 
-      <div id="{{ group.name }}-flush-collapse" class="accordion-collapse collapse" aria-labelledby="{{ group.name }}-flush-heading"
-           data-bs-parent="#main-flush">
-        <div class="accordion-body">
-          <div class="form-check form-switch">
-            <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault">
-            <label class="form-check-label" for="flexSwitchCheckDefault"><h6>{{ group.hint }}</h6></label>
+    <div id="{{ group.name }}" class="collapse container" style="border-left: 1px solid #FF8500">
+      <div class="accordion-body">
+        {% if group.models.__len__() > 0 %}
+          <div class="row">
+            <div class="col container">
+              <div class="row">
+                <div class="col">
+                  Препроцессор
+                </div>
+                <div class="col">
+                  Модель
+                </div>
+              </div>
+            </div>
+            <div class="col">
+              Интерпретатор прогнозов
+            </div>
           </div>
+        {% else %}
+          <span class=""> нет данных</span><img src="https://c.tenor.com/lqtU1G4aaqIAAAAi/yom-dance.gif" alt="dancing-cat" height="100" width="100">
+        {% endif %}
 
-          <hr class="divider">
-
-          <div class="row align-items-start">
-            <div class="col" id="group-{{ group.name }}">
-              <h5>Модель</h5>
-              {% for model in group.models %}
-                <div class="form-check">
-                  <input class="form-check-input" type="radio" name="group-{{ group.name }}" id="flexRadio-{{ group.name }}">
-                  <label class="form-check-label" for="flexRadio-{{ group.name }}">
+        <div class="row align-items-start" style="margin-top: 10px">
+          <div class="col container">
+            {% for model in group.models %}
+              <div class="form-check">
+                <input class="form-check-input" type="radio"
+                       name="group-{{ group.name }}" id="flexRadio-{{ model.id }}">
+                <label class="row form-check-label" for="flexRadio-{{ model.id }}">
+                  <div class="col">
                     {{ model.preprocessor.name }}
                     <span
                       data-bs-toggle="tooltip"
@@ -43,38 +59,55 @@
                     </svg>
                   </a>
                 </span>
-                    +{{ model.name }}
-                    <span class="badge bg-success">94%</span>
+                  </div>
+
+                  <div class="col">
+                    {{ model.name }}
                     <span
                       data-bs-toggle="tooltip"
                       data-bs-html="true"
                       data-bs-placement="top"
-                      title="
-                      {% for name, value in model.struct.items() %}
-                        {{ name }}: {{ value }} </br>
-                      {% endfor %}">
-                  <a href="#">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                         class="bi bi-info-circle" viewBox="0 0 16 16">
-                      <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"></path>
-                      <path
-                        d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533L8.93 6.588zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0z"></path>
-                    </svg>
-                  </a>
-                </span>
-                  </label>
-                </div>
-              {% endfor %}
-
-            </div>
+                      title="{% for name, value in model.struct.items() %}{{ name }}: {{ value }} </br> {% endfor %}">
+                          <a href="#">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                 class="bi bi-info-circle" viewBox="0 0 16 16">
+                              <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"></path>
+                              <path
+                                d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533L8.93 6.588zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0z"></path>
+                            </svg>
+                          </a>
+                        </span>
+                  </div>
+                </label>
+              </div>
+            {% endfor %}
           </div>
+          {% if group.name == 'toxic' %}
+            <div class="col">
+              <div class="form-check">
+                <input class="form-check-input" type="radio"
+                       name="inters" id="flexRadio-emoji">
+                <label class="row form-check-label" for="flexRadio-emoji">
+                  <div>Перевод в эмодзи 🤬😀</div>
+                </label>
+
+                <input class="form-check-input" type="radio"
+                       name="inters" id="flexRadio-prc">
+                <label class="row form-check-label" for="flexRadio-prc">
+                  <div>Перевод в проценты %</div>
+                </label>
+              </div>
+            </div>
+            {% else %}
+            <div class="col"></div>
+          {% endif %}
         </div>
       </div>
     </div>
-  {% endfor %}
+  </div>
+{% endfor %}
 
 
-</div>
 
 {#<div class="col" id="group1">
             <h5>Препроцессор</h5>

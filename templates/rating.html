@@ -1,19 +1,21 @@
 {% extends "base.html" %}
 
 {% block content %}
-  <h1 class="nya-text" style="margin-top: 5%; margin-bottom: 2%">Отчеты</h1>
+  <h1 class="nya-text" style="margin-top: 5%; margin-bottom: 2%">Лучшие модели</h1>
   <table class="table">
     <thead>
     <tr style="font-weight: bold">
-      <th scope="col">заголовок</th>
+      <th scope="col">#</th>
+      <th scope="col">название</th>
       <th scope="col">тэги</th>
-      <th scope="col">дата публикации</th>
+      <th scope="col">количество лайков</th>
     </tr>
     </thead>
     <tbody>
-    {% for i in range(10) %}
+    {% for i, score in scores %}
       <tr>
         {% for report in reports %}
+          <th>{{ i + 1 }}</th>
           <td>
             <a class="nya-a-2" href="/report/{{ report.title }}">{{ report.title }}</a>
           </td>
@@ -23,7 +25,8 @@
             {% endfor %}
           </td>
           <td>
-            {{ report.date.strftime('%d-%m-%Y') }}
+            {{ score }}
+{#            {{ report.date.strftime('%d-%m-%Y') }}#}
           </td>
         {% endfor %}
       </tr>

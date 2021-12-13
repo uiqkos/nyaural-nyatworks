@@ -1,7 +1,7 @@
 from collections import namedtuple
 from random import randint
 
-from flask import Flask
+from flask import Flask, request
 from flask import render_template
 from flask_bootstrap import Bootstrap
 from mongoengine import connect
@@ -12,7 +12,6 @@ from res.test_data import simple_comment, simple_report, toxic_model
 app = Flask(__name__)
 bootstrap = Bootstrap(app)
 connect('nyadb')
-Group = namedtuple('Group', 'header name hint models')
 
 
 def make_prediction(comment):
@@ -35,22 +34,19 @@ def predict():
     return render_template(
         'predict.html',
         groups=(
-            Group(
+            dict(
                 header='Токсичность',
                 name='toxic',
-                hint='Проводить анализ токсичности',
                 models=Model.objects(target='toxic')
             ),
-            Group(
+            dict(
                 header='Саркастичность',
                 name='sarcasm',
-                hint='Проводить анализ саркастичности',
                 models=Model.objects(target='sarcasm')
             ),
-            Group(
+            dict(
                 header='Тональность',
                 name='sentiment',
-                hint='Проводить анализ тональности',
                 models=Model.objects(target='sentiment')
             ),
         ),
@@ -59,6 +55,7 @@ def predict():
 
 @app.route('/results')
 def results():
+    print(request.args)
     return render_template(
         'results.html',
         comments=make_prediction(simple_comment)
@@ -79,6 +76,16 @@ def report(title):
         'model_report.html',
         **Report.objects.get(title=title).to_dict()
     )
+
+
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template('not_found.html')
+
+
+@app.route('/rating')
+def rating():
+    return render_template('rating.html', reports=Report.objects, scores=enumerate([145, 120, 98, 35, 12]))
 
 
 if __name__ == '__main__':

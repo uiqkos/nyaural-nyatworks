@@ -6,10 +6,10 @@
   <div class="row">
     <div class="col-3">
       <nav id="navbar" class="navbar navbar-light bg-light flex-column align-items-stretch p-3">
-        <a class="navbar-brand">Оглавление</a>
+        <a class="navbar-brand nya-text">Оглавление</a>
         <nav class="nav nav-pills flex-column">
           {% for chapter in chapters %}
-            <a class="nav-link" href="#{{ chapter.header.replace(' ', '-') }}">{{ chapter.header }}</a>
+            <a class="nya-active nav-link nya-a-2" href="#{{ chapter.header.replace(' ', '-') }}">{{ chapter.header }}</a>
           {% endfor %}
         </nav>
       </nav>
@@ -18,7 +18,7 @@
       <div style="overflow-y: scroll; height: 85vh; position: relative" data-bs-spy="scroll"
            data-bs-target="#navbar">
 
-        <p class="display-3" id="title">{{ title }}</p>
+        <p class="display-3 nya-text" id="title">{{ title }}</p>
         {% for tag in tags %}
           <span class="badge bg-{{ tag.color }}">{{ tag.name }}</span>
         {% endfor %}
