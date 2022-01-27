@@ -17,10 +17,13 @@
     }
 
     let randomSentiment = function () {
-      if (Math.random() > 0.5)
+      let r = Math.random()
+      if (r > 0.6)
         {#  return '<span class="nya-negative">sentiment</span>😡'#}
         {#return '<span class="nya-positive">sentiment</span> 😀'#}
         return '<span class="nya-negative rounded-pill badge">negative</span>'
+      if (r > 0.3)
+        return '<span class="nya-neutral rounded-pill badge">neutral</span>'
       return '<span class="nya-positive rounded-pill badge">positive</span>'
     }
 
