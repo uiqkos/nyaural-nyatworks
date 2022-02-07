@@ -15,7 +15,7 @@ function nextInt() {
 }
 
 export async function typingText(text_ids, textSources, cursor_id, completeClass) {
-  if (completeClass == undefined) {
+  if (completeClass === undefined) {
     completeClass = 'nya-decoration-lg-1'
   }
 
@@ -35,7 +35,7 @@ export async function typingText(text_ids, textSources, cursor_id, completeClass
     let source = textSources[i]
 
     for (let j = 0; j < source.length; j++) {
-      if (Math.random() > 0.85 && j != source.length - 1) {
+      if (Math.random() > 0.85 && j !== source.length - 1) {
         let randomch =  missclick(source[j])
         while (source[j] === randomch) {
           randomch = missclick(source[j])/*alphabet[Math.floor(Math.random() * (alphabet.length - 1))]*/
