@@ -11,11 +11,10 @@
     </tr>
     </thead>
     <tbody>
-    {% for i in range(10) %}
+        {% for report in object_list %}
       <tr>
-        {% for report in reports %}
           <td>
-            <a class="nya-a-2" href="/report/{{ report.title }}">{{ report.title }}</a>
+            <a class="nya-a-2" href="/reports/{{ report.title }}">{{ report.title }}</a>
           </td>
           <td>
             {% for tag in report.tags %}
@@ -23,11 +22,10 @@
             {% endfor %}
           </td>
           <td>
-            {{ report.date.strftime('%d-%m-%Y') }}
+            {{ report.date|date:"d-m-Y" }}
           </td>
-        {% endfor %}
       </tr>
-    {% endfor %}
+        {% endfor %}
     </tbody>
   </table>
 {% endblock %}

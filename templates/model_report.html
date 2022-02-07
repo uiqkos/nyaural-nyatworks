@@ -1,5 +1,7 @@
 {% extends "base.html" %}
 
+{% load rest_framework %}
+
 {% block content %}
 
   <div style="height: 30px"></div>
@@ -8,8 +10,8 @@
       <nav id="navbar" class="navbar navbar-light bg-light flex-column align-items-stretch p-3">
         <a class="navbar-brand nya-text">Оглавление</a>
         <nav class="nav nav-pills flex-column">
-          {% for chapter in chapters %}
-            <a class="nya-active nav-link nya-a-2" href="#{{ chapter.header.replace(' ', '-') }}">{{ chapter.header }}</a>
+          {% for chapter in report.chapters %}
+            <a class="nya-active nav-link nya-a-2" href="">{{ chapter.header }}</a>
           {% endfor %}
         </nav>
       </nav>
@@ -19,16 +21,16 @@
            data-bs-target="#navbar">
 
         <p class="display-3 nya-text" id="title">{{ title }}</p>
-        {% for tag in tags %}
+        {% for tag in report.tags %}
           <span class="badge bg-{{ tag.color }}">{{ tag.name }}</span>
         {% endfor %}
-        <span class="badge bg-secondary ">{{ date.strftime('%Y-%m-%d') }}</span>
+        <span class="badge bg-secondary ">{{ date|date:'Y-m-d' }}</span>
 
         <hr class="divider">
 
         <div data-bs-spy="scroll" data-bs-target="#navbar" data-bs-offset="0" tabindex="0">
-          {% for chapter in chapters %}
-            <h4 id="{{ chapter.header.replace(' ', '-') }}">{{ chapter.header }}</h4>
+          {% for chapter in report.chapters %}
+            <h4 id="#{{ chapter.header|cut:' ' }}">{{ chapter.header }}</h4>
 
             {% for item in chapter.content %}
               {% if item.img is not none %}
@@ -40,7 +42,7 @@
               {% elif item.table is not none %}
                 <h5 style="padding-top: 20px">{{ item.text }}</h5>
                 <ul class="list-group list-group-flush">
-                  {% for key, value in item.table.items() %}
+                  {% for key, value in item.table.items %}
                     <li class="list-group-item">{{ key }}
 
                       {% if value.color is defined %}

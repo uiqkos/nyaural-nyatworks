@@ -1,3 +1,4 @@
+{% load static %}
 <div class="text-center">
   <div class="logo-box">
     <h1 class="display-1 nya-text-header">
@@ -8,7 +9,7 @@
 </div>
 
 <script type="module">
-    import { typingText } from '../static/scripts/main.js'
+    import { typingText } from '{% static 'scripts/main.js' %}'
 
     typingText(
         ['nya1', 'nya2'],

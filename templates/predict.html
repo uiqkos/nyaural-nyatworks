@@ -1,11 +1,11 @@
 {% extends "base.html" %}
 
 {% block content %}
-  <div class="container search" style="position: relative;">
-    <form action="/results">
+  <form action="/results">
+    <div class="container search" style="position: relative;">
       <div class="row">
         <div class="col-md-3 mb-3">
-          <select id="inputState" class="form-control nya-a-2 nya-remove-shadow text-center" name="inputState">
+          <select id="input" class="form-control nya-a-2 nya-remove-shadow text-center" name="input">
             <option selected>ручной ввод текста</option>
             <option>vk</option>
             <option>twitter</option>
@@ -21,7 +21,7 @@
           </div>
         </div>
         <div class="col-md-3">
-          <button class="btn nya-remove-shadow nya-a-2" type="submit" >провести анализ
+          <button class="btn nya-remove-shadow nya-a-2" type="submit">провести анализ
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                  class="bi bi-arrow-right" viewBox="0 0 16 16">
               <path fill-rule="evenodd"
@@ -30,14 +30,12 @@
           </button>
         </div>
       </div>
-    </form>
-  </div>
+    </div>
 
-  <h4 class="nya-text" style="padding-top: 30px">Настройка анализатора</h4>
+    <h4 class="nya-text" style="padding-top: 30px">Настройка анализатора</h4>
+    {% include "params.html" %}
 
-{#  <div style="padding-top: 30px"></div>#}
-
-  {% include "params.html" %}
+  </form>
 
 {% endblock %}
 

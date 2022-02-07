@@ -1,4 +1,35 @@
-{#<div class="accordion accordion-flush" id="main-flush">#}
+<div>
+  <a
+    class="btn nya-remove-shadow nya-a-2 nya-text"
+    data-bs-toggle="collapse"
+    href="#interpreter-container"
+    role="button"
+    aria-expanded="false"
+    aria-controls="interpreter-container">
+    Интерпретатор прогнозов
+  </a>
+
+  <div id="interpreter-container" class="collapse container" style="border-left: 1px solid #FF8500">
+    <div class="accordion-body">
+      <div class="col">
+        <div class="form-check">
+          <input class="form-check-input" type="radio" value="emoji"
+                 name="interpreter" id="flexRadio-emoji">
+          <label class="row form-check-label" for="flexRadio-emoji">
+            <div>перевод в эмодзи 🤬😀</div>
+          </label>
+
+          <input class="form-check-input" type="radio" value="percent"
+                 name="interpreter" id="flexRadio-prc">
+          <label class="row form-check-label" for="flexRadio-prc">
+            <div>перевод в проценты %</div>
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 {% for group in groups %}
   <div>
     <a
@@ -13,7 +44,7 @@
 
     <div id="{{ group.name }}" class="collapse container" style="border-left: 1px solid #FF8500">
       <div class="accordion-body">
-        {% if group.models.__len__() > 0 %}
+        {% if group.models|length > 0 %}
           <div class="row">
             <div class="col container">
               <div class="row">
@@ -26,20 +57,21 @@
               </div>
             </div>
             <div class="col">
-              Интерпретатор прогнозов
             </div>
           </div>
         {% else %}
-          <span class=""> нет данных</span><img src="https://c.tenor.com/lqtU1G4aaqIAAAAi/yom-dance.gif" alt="dancing-cat" height="100" width="100">
+          <span class=""> нет данных</span>
+          <img src="https://c.tenor.com/lqtU1G4aaqIAAAAi/yom-dance.gif" alt="dancing-cat" height="100"
+               width="100">
         {% endif %}
 
         <div class="row align-items-start" style="margin-top: 10px">
           <div class="col container">
             {% for model in group.models %}
               <div class="form-check">
-                <input class="form-check-input" type="radio"
-                       name="group-{{ group.name }}" id="flexRadio-{{ model.id }}">
-                <label class="row form-check-label" for="flexRadio-{{ model.id }}">
+                <input class="form-check-input" type="radio" value="{{ model.name }}"
+                       name="{{ group.name }}" id="flexRadio-{{ model.name|add:model.target }}">
+                <label class="row form-check-label" for="flexRadio-{{ model.name|add:model.target }}">
                   <div class="col">
                     {{ model.preprocessor.name }}
                     <span
@@ -50,15 +82,15 @@
                     {% for stage in model.preprocessor.stages %}
                       {{ stage.name }} </br>
                     {% endfor %}">
-                  <a href="/report/{{ model.preprocessor.name }}">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                         class="bi bi-info-circle" viewBox="0 0 16 16">
-                      <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"></path>
-                      <path
-                        d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533L8.93 6.588zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0z"></path>
-                    </svg>
-                  </a>
-                </span>
+                      <a href="/report/{{ model.preprocessor.name }}">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                             class="bi bi-info-circle" viewBox="0 0 16 16">
+                          <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"></path>
+                          <path
+                            d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533L8.93 6.588zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0z"></path>
+                        </svg>
+                      </a>
+                    </span>
                   </div>
 
                   <div class="col">
@@ -67,8 +99,9 @@
                       data-bs-toggle="tooltip"
                       data-bs-html="true"
                       data-bs-placement="top"
-                      title="{% for name, value in model.struct.items() %}{{ name }}: {{ value }} </br> {% endfor %}">
-                          <a href="/report/{{ model.name }}">
+                      title="
+                        {% for name, value in model.struct.items %}{{ name }}: {{ value }} </br> {% endfor %}">
+                          <a href="#">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                  class="bi bi-info-circle" viewBox="0 0 16 16">
                               <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"></path>
@@ -79,214 +112,13 @@
                         </span>
                   </div>
                 </label>
+
               </div>
             {% endfor %}
           </div>
-          {% if group.name == 'toxic' %}
-            <div class="col">
-              <div class="form-check">
-                <input class="form-check-input" type="radio"
-                       name="inters" id="flexRadio-emoji">
-                <label class="row form-check-label" for="flexRadio-emoji">
-                  <div>Перевод в эмодзи 🤬😀</div>
-                </label>
-
-                <input class="form-check-input" type="radio"
-                       name="inters" id="flexRadio-prc">
-                <label class="row form-check-label" for="flexRadio-prc">
-                  <div>Перевод в проценты %</div>
-                </label>
-              </div>
-            </div>
-            {% else %}
-            <div class="col"></div>
-          {% endif %}
         </div>
       </div>
     </div>
   </div>
 {% endfor %}
 
-
-
-{#<div class="col" id="group1">
-            <h5>Препроцессор</h5>
-
-            <div class="form-check">
-              <input class="form-check-input" type="radio" name="group1" id="flexRadioDefault1">
-              <label class="form-check-label" for="flexRadioDefault1">
-                Default
-                <span class="badge bg-success">98%</span>
-                <span
-                  data-bs-toggle="tooltip"
-                  data-bs-html="true"
-                  data-bs-placement="top"
-                  title="
-                    cleaner: all</br>
-                    stopwords remover: true</br>
-                    stemmer: snowball</br>
-                    lemmatizer: true</br>
-                    tokenizer.pad: true">
-                  <a href="#">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                         class="bi bi-info-circle" viewBox="0 0 16 16">
-                      <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"></path>
-                      <path
-                        d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533L8.93 6.588zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0z"></path>
-                    </svg>
-                  </a>
-                </span>
-              </label>
-            </div>
-
-            <div class="form-check">
-              <input class="form-check-input" type="radio" name="group1" id="flexRadioDefault2">
-              <label class="form-check-label" for="flexRadioDefault2">
-                Simple
-                <span class="badge bg-warning">64%</span>
-                <span
-                  data-bs-toggle="tooltip"
-                  data-bs-html="true"
-                  data-bs-placement="top"
-                  title="
-                    cleaner: numbers</br>
-                    stopwords remover: true</br>
-                    stemmer: snowball</br>
-                    lemmatizer: false">
-                  <a href="#">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                         class="bi bi-info-circle" viewBox="0 0 16 16">
-                      <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"></path>
-                      <path
-                        d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533L8.93 6.588zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0z"></path>
-                    </svg>
-                  </a>
-                </span>
-              </label>
-            </div>
-          </div>
-#}
-{#<div class="accordion-item">
-    <h2 class="accordion-header" id="flush-headingTwo">
-      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-              data-bs-target="#flush-collapseTwo" aria-expanded="false" aria-controls="flush-collapseTwo">
-        Предмет анализа
-      </button>
-    </h2>
-
-    <div id="flush-collapseTwo" class="accordion-collapse collapse" aria-labelledby="flush-headingTwo"
-         data-bs-parent="#accordionFlushExample">
-      <div class="accordion-body">
-        <div class="form-check">
-          <input class="form-check-input" type="checkbox" value="" id="checkbox1" checked>
-          <label class="form-check-label" for="checkbox1">
-            Токсичность
-          </label>
-        </div>
-
-        <div class="form-check">
-          <input class="form-check-input" type="checkbox" value="" id="checkbox2" checked>
-          <label class="form-check-label" for="checkbox2">
-            Саркастичность
-          </label>
-        </div>
-
-        <div class="form-check">
-          <input class="form-check-input" type="checkbox" value="" id="checkbox3" checked>
-          <label class="form-check-label" for="checkbox3">
-            Эмоциональность
-          </label>
-        </div>
-
-      </div>
-    </div>
-  </div>#}{#
-            <div class="form-check">
-              <input class="form-check-input" type="radio" name="group2" id="flexRadioDefault4">
-              <label class="form-check-label" for="flexRadioDefault4">
-                Default preprocessor
-                <span
-                  data-bs-toggle="tooltip"
-                  data-bs-html="true"
-                  data-bs-placement="top"
-                  title="
-                    cleaner: all</br>
-                    stopwords remover: true</br>
-                    stemmer: snowball</br>
-                    lemmatizer: true</br>
-                    tokenizer.pad: true">
-                  <a href="#">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                         class="bi bi-info-circle" viewBox="0 0 16 16">
-                      <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"></path>
-                      <path
-                        d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533L8.93 6.588zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0z"></path>
-                    </svg>
-                  </a>
-                </span>
-                +Light CNN
-                <span class="badge bg-success">91%</span>
-                <span
-                  data-bs-toggle="tooltip"
-                  data-bs-html="true"
-                  data-bs-placement="top"
-                  title="
-                    conv layers: 2</br>
-                    dense layers: 1</br>
-                    architecture: CNN">
-                  <a href="#">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                         class="bi bi-info-circle" viewBox="0 0 16 16">
-                      <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"></path>
-                      <path
-                        d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533L8.93 6.588zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0z"></path>
-                    </svg>
-                  </a>
-                </span>
-              </label>
-            </div>
-
-            <div class="form-check">
-              <input class="form-check-input" type="radio" name="group2" id="flexRadioDefault5">
-              <label class="form-check-label" for="flexRadioDefault5">
-                Light preprocessor
-                <span
-                  data-bs-toggle="tooltip"
-                  data-bs-html="true"
-                  data-bs-placement="top"
-                  title="
-                    cleaner: all</br>
-                    stopwords remover: true</br>
-                    stemmer: snowball</br>
-                    lemmatizer: true</br>
-                    tokenizer.pad: true">
-                  <a href="#">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                         class="bi bi-info-circle" viewBox="0 0 16 16">
-                      <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"></path>
-                      <path
-                        d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533L8.93 6.588zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0z"></path>
-                    </svg>
-                  </a>
-                </span>
-                +Large MLP
-                <span class="badge bg-warning">87%</span>
-                <span
-                  data-bs-toggle="tooltip"
-                  data-bs-html="true"
-                  data-bs-placement="top"
-                  title="
-                    hidden layers: 6</br>
-                    architecture: MLP</br>
-                    dropout: 0.5">
-                  <a href="#">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                         class="bi bi-info-circle" viewBox="0 0 16 16">
-                      <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"></path>
-                      <path
-                        d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533L8.93 6.588zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0z"></path>
-                    </svg>
-                  </a>
-                </span>
-              </label>
-            </div>#}

@@ -1,15 +1,16 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block content %}
   <div class="logo-box">
     <h1 class="display-1 nya-text-header text-center">
-      <img src="https://c.tenor.com/NjbLQCvQoC8AAAAC/bongo-cat.gif"  alt="dancing-cat" height="20%" width="20%" id="gif">
+      <img src="{% static 'img/404cat.gif' %}" alt="dancing-cat" height="20%" width="20%" id="gif">
       <p></p>
       <span class="display-1 nya-header" id="404"></span> <span class="display-1 nya-header" id="not"></span> <span class="display-1 nya-header" id="found"></span><span class="display-1" id="cursor">|</span>
     </h1>
   </div>
   <script type="module">
-      import {typingText} from '../static/scripts/main.js'
+      import { typingText } from '{% static 'scripts/main.js' %}'
 
       typingText(
           ['404', 'not', 'found'],

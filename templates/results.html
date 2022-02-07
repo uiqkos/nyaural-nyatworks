@@ -8,61 +8,48 @@
 
   <script type="text/javascript">
 
-    let randomToxic = function () {
-      if (Math.random() > 0.5)
-        {#  return '<span class="nya-negative">toxic</span> 🤬'#}
-        {#return '<span class="nya-positive">toxic</span> 😀'#}
-        return '<span class="nya-negative rounded-pill badge">toxic</span>'
-      return '<span class="nya-positive rounded-pill badge">no toxic</span>'
+    let floatColor = function(r) {
+        let red = 255 - (255 * (r < 0.5) * (1 - r))
+        let green = 255 - (255 * (r > 0.5) * (r - 0.5) * 2)
+        let color = (r > 0.6) ? 'white' : 'black'
+        return `background-color: rgb(${red}, ${green}, 0); color: ${color}`
     }
 
-    let randomSentiment = function () {
-      let r = Math.random()
-      if (r > 0.6)
-        {#  return '<span class="nya-negative">sentiment</span>😡'#}
-        {#return '<span class="nya-positive">sentiment</span> 😀'#}
-        return '<span class="nya-negative rounded-pill badge">negative</span>'
-      if (r > 0.3)
-        return '<span class="nya-neutral rounded-pill badge">neutral</span>'
-      return '<span class="nya-positive rounded-pill badge">positive</span>'
+    let borderFloatColor = function(r) {
+        return "rgba(255, 133, 0, " + (1 - (r / 4)).toString() + ")"
     }
 
-    let randomSarcasm = function () {
-      if (Math.random() > 0.5)
-        {#  return '<span class="nya-negative">sarcasm</span> 🤣'#}
-        {#return '<span class="nya-positive">sarcasm</span> 😀'#}
-        return '<span class="nya-negative rounded-pill badge">sarcasm</span>'
-      return '<span class="nya-positive rounded-pill badge">no sarcasm</span>'
+    let pill = function(target, value) {
+        return '<span class="rounded-pill badge" style="' + floatColor(value) + '">' + target + ' ' + value.toFixed(3) + '%</span>'
     }
 
     function commentToHTML(comment) {
       return '' +
         '<p class="nya-text">' + comment.author + '</p>' +
-        '<div class="comment">' +
+        {#'<div class="comment">' +#}
         '<p style="margin-left: 1%">' + comment.text + '</p>' +
-        ((comment.score !== undefined) ? ('<p>' + comment.score + '</p>') : '') +
-        randomToxic() + ' | ' + randomSentiment() + ' | ' + randomSarcasm() +
-        '</div>'
+        {% comment %}pill('toxic', comment.toxic) + ' | ' + pill('sentiment', {% endcomment %}comment.sentiment{% comment %}) + ' | ' + pill('sarcasm', comment.sarcasm){% endcomment %}
+        {#'</div>'#}
     }
 
-    function expand(comment, is_nested) {
+    function expand(comment, nested_level) {
       let html_text = ''
 
       if (comment.comments.length === 0) {
         return commentToHTML(comment)
       }
 
-      if (is_nested) {
-        html_text += '<div class="list-group nested ">'
+      if (nested_level) {
+        html_text += '<div class="list-group nested" style="border-radius: 0; border-left: 2px solid ' + borderFloatColor(nested_level + 1) + '">'
       } else {
-        html_text += '<div class="list-group">'
+        html_text += '<div class="list-group" style="border-radius: 0; border-left: 2px solid ' + borderFloatColor(nested_level + 1) + '">'
       }
 
       html_text += commentToHTML(comment)
 
       comment.comments.forEach(function (nested) {
-        html_text += '<div class="list-group-item comment" style="border-radius: 0">'
-        html_text += expand(nested, true)
+        html_text += '<div class="comment list-group-item">'
+        html_text += expand(nested, nested_level + 1)
         html_text += '</div>'
       })
 
@@ -71,7 +58,7 @@
     }
 
     mainContainer = document.getElementById('mainContainer')
-    let expanded = expand({{ comments | safe }}, false)
+    let expanded = expand({{ comments | safe }}, 0)
     mainContainer.innerHTML += '<div class="list-group">'
     mainContainer.innerHTML += expanded
     mainContainer.innerHTML += '</div>'
