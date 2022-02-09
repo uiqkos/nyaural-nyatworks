@@ -8,51 +8,65 @@
 
   <script type="text/javascript">
 
-    let floatColor = function(r) {
-        let red = 255 - (255 * (r < 0.5) * (1 - r))
-        let green = 255 - (255 * (r > 0.5) * (r - 0.5) * 2)
-        let color = (r > 0.6) ? 'white' : 'black'
-        return `background-color: rgb(${red}, ${green}, 0); color: ${color}`
+    let floatColor = function (r) {
+      let red = 255 - (255 * (r < 0.5) * (1 - r * 2))
+      let green = 255 - (255 * (r > 0.5) * (r - 0.5) * 2)
+      let color = (r > 0.6) ? 'white' : 'black'
+      return `background-color: rgb(${red}, ${green}, 0); color: ${color}`
     }
 
-    let borderFloatColor = function(r) {
-        return "rgba(255, 133, 0, " + (1 - (r / 4)).toString() + ")"
+    let borderFloatColor = function (r) {
+      return "rgba(255, 133, 0, " + (1 - (r / 4)).toString() + ")"
     }
 
-    let pill = function(target, value) {
-        return '<span class="rounded-pill badge" style="' + floatColor(value) + '">' + target + ' ' + value.toFixed(3) + '%</span>'
+    function pill(target, value, variants) {
+      let color
+      if (value === null) {
+        value = '?'
+        color = 'background-color: #4ed5ec; color: #ffffff'
+      } else {
+        if (variants !== undefined) {
+          if (value < 0.5) {
+            target = variants[0]
+            value = 1 - value
+          } else {
+            target = variants[1]
+          }
+        }
+        color = floatColor(value)
+        value = Math.round(value * 100)
+      }
+
+      return '<span class="rounded-pill badge" style="' + color + '">' + target + ' ' + value + '%</span>'
     }
 
-    function commentToHTML(comment) {
-      return '' +
+    function commentToHTML(comment, style) {
+      return '<div style="' + style + '">' +
         '<p class="nya-text">' + comment.author + '</p>' +
-        {#'<div class="comment">' +#}
         '<p style="margin-left: 1%">' + comment.text + '</p>' +
-        {% comment %}pill('toxic', comment.toxic) + ' | ' + pill('sentiment', {% endcomment %}comment.sentiment{% comment %}) + ' | ' + pill('sarcasm', comment.sarcasm){% endcomment %}
-        {#'</div>'#}
+        pill('toxic', comment.toxic) + ' ' + pill('negative', comment.sentiment, ['positive', 'negative']) + ' ' + pill('sarcasm', comment.sarcasm) +
+        '</div>'
     }
 
     function expand(comment, nested_level) {
       let html_text = ''
-
-      if (comment.comments.length === 0) {
-        return commentToHTML(comment)
-      }
+      let style = 'border-left: 2px solid ' + borderFloatColor(nested_level + 1)
 
       if (nested_level) {
-        html_text += '<div class="list-group nested" style="border-radius: 0; border-left: 2px solid ' + borderFloatColor(nested_level + 1) + '">'
+        html_text += '<div class="list-group nested">'
       } else {
-        html_text += '<div class="list-group" style="border-radius: 0; border-left: 2px solid ' + borderFloatColor(nested_level + 1) + '">'
+        html_text += '<div class="list-group">'
       }
 
       html_text += commentToHTML(comment)
 
-      comment.comments.forEach(function (nested) {
-        html_text += '<div class="comment list-group-item">'
-        html_text += expand(nested, nested_level + 1)
-        html_text += '</div>'
-      })
-
+      if (comment.comments.length !== 0) {
+        comment.comments.forEach(function (nested) {
+          html_text += '<div class="comment list-group-item">'
+          html_text += expand(nested, nested_level + 1, style)
+          html_text += '</div>'
+        })
+      }
       html_text += '</div>'
       return html_text
     }
