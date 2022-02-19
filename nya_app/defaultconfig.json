@@ -1,0 +1,16 @@
+{
+  "parsers": {
+    "vk": {
+      "token": null,
+      "api_v": "5.131",
+      "app_id": null,
+      "login": null,
+      "password": null
+    }
+  },
+  "targets": [
+    "toxic",
+    "sentiment",
+    "sarcasm"
+  ]
+}

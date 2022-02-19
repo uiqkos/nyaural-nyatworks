@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <h1 class="nya-text" style="margin-top: 5%; margin-bottom: 2%">Отчеты</h1>
+  <table class="table">
+    <thead>
+    <tr style="font-weight: bold">
+      <th scope="col">заголовок</th>
+      <th scope="col">тэги</th>
+      <th scope="col">дата публикации</th>
+    </tr>
+    </thead>
+    <tbody>
+        {% for report in object_list %}
+      <tr>
+          <td>
+            <a class="nya-a-2" href="/reports/{{ report.title }}">{{ report.title }}</a>
+          </td>
+          <td>
+            {% for tag in report.tags %}
+              <span class="badge bg-{{ tag.color }}">{{ tag.name }}</span>
+            {% endfor %}
+          </td>
+          <td>
+            {{ report.date|date:"d-m-Y" }}
+          </td>
+      </tr>
+        {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}

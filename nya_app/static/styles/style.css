@@ -1,0 +1,217 @@
+.list-group {
+    margin-bottom: 3%;
+}
+
+.nested {
+    margin-left: 0.5%;
+    margin-top: 0.3%;
+}
+
+.empty-search {
+    margin-top: 15%;
+}
+
+.search {
+    margin-top: 10%;
+}
+
+.navbar {
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+@font-face {
+    font-family: 'electroharmonix';
+    src: url(../fonts/electroharmonix.ttf);
+
+}
+@font-face {
+    font-family: 'LiberationMono';
+    src: url(../fonts/LiberationMono.ttf);
+}
+
+@font-face {
+    font-family: 'EmperorOfJapan';
+    src: url(../fonts/EmperorOfJapan-GW6O.otf);
+}
+
+@font-face {
+    font-family: 'FujimaruRegular';
+    src: url(../fonts/FujimaruRegular-WGYY.ttf);
+}
+
+@font-face {
+    font-family: 'RenjiFreeTrial';
+    src: url(../fonts/RenjiFreeTrial-d9gRV.otf);
+}
+
+@font-face {
+    font-family: 'ZenzaiItacha';
+    src: url(../fonts/ZenzaiItacha-vElZ.ttf);
+}
+
+:root {
+    --first-color: #dd2d4a;
+    /*--first-color: #5A189A;*/
+    --second-color: #f26a8d;
+    /*--second-color: #FF8500;*/
+}
+
+.nya-first-color {
+    color: var(--first-color);
+}
+
+.nya-second-color {
+    color: var(--second-color);
+}
+
+.nya-text-header {
+    font-family: electroharmonix, serif;
+}
+
+.nya-text {
+    font-family: LiberationMono, serif;
+    text-decoration: underline 3px;
+    text-decoration-color: var(--first-color);
+}
+
+.nya-complete {
+    text-decoration: underline wavy 4px;
+    text-decoration-color: var(--first-color);
+}
+
+/*.nya-border {*/
+/*    !*border: 3px solid var(--second-color);*!*/
+/*    border: 3px solid var(--first-color);*/
+/*}*/
+
+/*.nya-border-1 {*/
+/*    border: 3px solid var(--first-color);*/
+/*    !*border: 3px solid var(--second-color);*!*/
+/*}*/
+
+/*.nya-border-2 {*/
+/*    border: 3px solid #5A189A;*/
+/*}*/
+
+.logo-box {
+    /*border: 3px solid var(--second-color);*/
+    padding-top: 9%;
+    /*padding-bottom: 7%;*/
+    margin: 50px;
+}
+
+.nya-decoration-sm-1 {
+    text-decoration: underline wavy 2px;
+    font-weight: bold;
+    text-decoration-color: var(--second-color);
+}
+
+.nya-decoration-sm-2 {
+    text-decoration: underline wavy 2px;
+    font-weight: bold;
+    text-decoration-color: var(--first-color);
+}
+
+.nya-decoration-lg-1 {
+    text-decoration: underline wavy 4px;
+    /*font-weight: bold;*/
+    text-decoration-color: var(--second-color);
+}
+
+.nya-decoration-lg-2 {
+    text-decoration: underline wavy 4px;
+    font-weight: bold;
+    text-decoration-color: var(--first-color);
+}
+
+.nya-decoration-m-1 {
+    text-decoration: underline wavy 3px;
+    font-weight: bold;
+    text-decoration-color: var(--second-color);
+}
+
+.nya-decoration-m-2 {
+    text-decoration: underline wavy 3px;
+    font-weight: bold;
+    text-decoration-color: var(--first-color);
+}
+
+.nya-margin {
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+.nya-a-1 {
+    /*border: 4px solid transparent;*/
+    text-decoration: unset;
+    color: black;
+}
+
+.nya-a-1:hover {
+    /*border: 4px solid var(--second-color);*/
+    color: black;
+    /*color: var(--second-color);*/
+    text-decoration: unset;
+    text-decoration: underline wavy 2px;
+
+    /*font-weight: bold;*/
+    text-decoration-color: var(--second-color);
+}
+
+.nya-a-2 {
+    color: black;
+    font-size: large;
+    text-decoration: unset;
+}
+
+.nya-a-2:hover {
+    color: black;
+    font-size: large;
+    text-decoration: underline 2px;
+    text-decoration-color: var(--second-color);
+}
+
+.nya-remove-shadow:focus {
+    box-shadow: unset;
+    border: unset;
+    background-color: transparent;
+
+}
+.nya-active.active {
+    background-color: transparent !important;
+    color: var(--second-color) !important;
+}
+
+.nya-remove-shadow {
+    box-shadow: unset;
+    border: unset;
+    background-color: transparent;
+}
+
+
+.comment {
+    /*border-left: 2px;*/
+    border-radius: 0;
+    border-bottom: 0;
+    border-right: 0;
+    border-top: 0;
+    padding-left: 1%;
+}
+
+.nya-positive {
+    background-color: rgba(127, 255, 189, 0.6);
+    color: #444444;
+}
+
+.nya-negative {
+    background-color: rgba(255, 127, 161, 0.56);
+    color: #444444;
+}
+
+
+.nya-neutral {
+    background-color: rgba(255, 229, 127, 0.56);
+    color: #444444;
+}
+
