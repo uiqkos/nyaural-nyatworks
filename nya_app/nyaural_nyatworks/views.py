@@ -79,7 +79,6 @@ class Paginator:
 
 class CommentsView(APIView):
     def get(self, request):
-        print(request.GET)
         input_method = request.GET.get('input')
         text = request.GET.get('text')
         page = int(request.GET.get('page')) if 'page' in request.GET else None
@@ -89,7 +88,7 @@ class CommentsView(APIView):
             parsers
                 .get(input_method)
                 .create()
-                .setup(**config['parsers']['vk'])
+                .setup(**config['parsers'][input_method])
                 .parse(text)
         )
 
@@ -139,7 +138,6 @@ class MakePredictions(TemplateView):
     template_name = 'results.html'
 
     def post(self, request):
-        print(request.POST)
         return self.render_to_response({})
 
 
@@ -149,7 +147,6 @@ class PredictResultsView(ListView):
         get.update(request.GET)
         get['page'] = 0
         get['styled'] = 1
-        print(get)
         request.GET = get
         # request.GET = {**request.GET, 'page': 0}
 
