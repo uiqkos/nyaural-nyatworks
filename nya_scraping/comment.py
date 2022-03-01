@@ -9,7 +9,7 @@ class Author:
     name: str
     photo: str
 
-
+# todo add likes
 @dataclass
 class Comment:
     text: str
@@ -17,6 +17,11 @@ class Comment:
     date: str = None
 
     comments: List['Comment'] = field(default_factory=list)
+
+    @classmethod
+    @property
+    def empty(cls):
+        return cls('')
 
     @property
     def attributes(self):
@@ -35,6 +40,9 @@ class Comment:
             }
 
         return d
+
+    def __len__(self):
+        return 1 + sum(map(len, self.comments))
 
 
 @dataclass
