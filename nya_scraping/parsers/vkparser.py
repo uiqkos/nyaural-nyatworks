@@ -34,11 +34,7 @@ def _convert_appeals(text):
 
 
 class VKParser(Parser):
-    def __init__(self):
-        self.session = None
-        self.api = None
-
-    def setup(self, app_id=None, login=None, password=None, token=None, api_v=None):
+    def __init__(self, app_id=None, login=None, password=None, token=None, api_v=None):
         if app_id and login and password:
             self.session = vk.AuthSession(app_id=app_id, user_login=login, user_password=password)
         elif token:
@@ -47,8 +43,6 @@ class VKParser(Parser):
             self.session = vk.Session()
 
         self.api = vk.API(self.session, v=api_v, lang='ru')
-
-        return self
 
     def _extract_comment(self, json_comment, profiles) -> Comment:
         return Comment(
@@ -69,14 +63,13 @@ class VKParser(Parser):
                 ))
         )
 
-    def parse(self, url):
+    def parse(self, url, skip: int = 0, take: int = None):
         owner_id, post_id = re.findall(r'wall(-?\d+)_(\d+)', url)[0]
 
         post = self.api.wall.getById(
             posts=[f'{owner_id}_{post_id}'],
             extended=True
         )
-
         root = post['items'][0]
 
         comments = self.api.wall.getComments(
@@ -87,12 +80,13 @@ class VKParser(Parser):
             thread_items_count=10
         )
 
-        # print(json.dumps(comments, sort_keys=True, indent=4))
+        # print(json.dumps(comments, sort_keys=True, indent=4, ensure_ascii=False))
 
-        return self._extract_comment({
+        comment = self._extract_comment({
             'text': root['text'],
             'from_id': root['from_id'],
             'date': root['date'],
             'thread': comments
         }, profiles=comments['profiles'] + post['groups'])
 
+        return comment
