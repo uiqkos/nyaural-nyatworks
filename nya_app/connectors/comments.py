@@ -27,6 +27,9 @@ class CommentOneDim(CommentDecorator):
             'comments': self.comments,
         }
 
+    def __len__(self):
+        return 1 + self.comments
+
 
 def iterate_comment_level(comment: Comment, level=0):
     yield CommentOneDim(comment, level=level)
@@ -47,9 +50,15 @@ class LabeledComment(CommentDecorator):
     toxic: Dict[str, float] = None
     sarcasm: Dict[str, float] = None
 
-    def __init__(self, comment, predictors: Dict[str, Callable[[Comment], Dict[str, float]]] = None):
+    def __init__(self, comment, toxic=None, sentiment=None, sarcasm=None):
         super().__init__(comment)
 
+        self.toxic = toxic
+        self.sentiment = sentiment
+        self.sarcasm = sarcasm
+
+    @classmethod
+    def from_predictors(cls, comment, predictors: Dict[str, Callable[[Comment], Dict[str, float]]] = None):
         predictors = predictors or {}
 
         predictors = {
@@ -59,8 +68,13 @@ class LabeledComment(CommentDecorator):
             **predictors
         }
 
-        for target, predictor in predictors.items():
-            setattr(self, target, predictor(comment))
+        return cls(
+            comment,
+            **{
+                target: predictor(comment)
+                for target, predictor in predictors.items()
+            }
+        )
 
     @property
     def attributes(self):
