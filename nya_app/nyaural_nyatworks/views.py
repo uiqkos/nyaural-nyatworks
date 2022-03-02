@@ -27,28 +27,6 @@ _model_adapter_factory = ModelAdapterFactory(registrar)
 _parser_factory = ParserFactory(config['parsers'])
 
 
-def handler404(request, exception):
-    return render(request, 'not_found.html', status=404)
-
-
-class HomeView(TemplateView):
-    template_name = 'home.html'
-
-
-class ReportListView(ListView):
-    model = Report
-    template_name = 'reports.html'
-
-
-class ReportDetailView(DetailView):
-    model = Report
-    queryset = Report.objects.all()
-
-    def get(self, request, *args, **kwargs):
-        report = get_object_or_404(self.model, title=kwargs['title'])
-        return render(request, 'model_report.html', {'report': report})
-
-
 class ReportViewSet(ModelViewSet):
     queryset = Report.objects.all()
     serializer_class = ReportSerializer
@@ -57,21 +35,6 @@ class ReportViewSet(ModelViewSet):
 class ModelViewSet(ModelViewSet):
     queryset = Model.objects.all()
     serializer_class = ModelSerializer
-
-
-class PredictView(TemplateView):
-    template_name = 'predict.html'
-    _Group = namedtuple('Group', 'name header models')
-
-    def get_context_data(self, **kwargs):
-        context = super(PredictView, self).get_context_data(**kwargs)
-        context['groups'] = [
-            PredictView._Group('toxic', 'Токсичность', Model.objects.filter(target='toxic')),
-            PredictView._Group('sentiment', 'Эмоциональность', Model.objects.filter(target='sentiment')),
-            PredictView._Group('sarcasm', 'Саркастичность', Model.objects.filter(target='sarcasm')),
-        ]
-
-        return context
 
 
 @dataclass

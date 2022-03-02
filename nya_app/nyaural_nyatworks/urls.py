@@ -11,8 +11,6 @@ api_router = DefaultRouter()
 api_router.register('reports', ReportViewSet)
 api_router.register('models', ModelViewSet)
 
-handler404 = handler404
-
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include(api_router.urls)),
