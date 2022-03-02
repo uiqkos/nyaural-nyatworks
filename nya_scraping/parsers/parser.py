@@ -1,3 +1,4 @@
+import re
 from abc import abstractmethod, ABC
 from typing import Union, Tuple
 
@@ -10,5 +11,5 @@ class Parser(ABC):
         return cls(*args, **kwargs)
 
     @abstractmethod
-    def parse(self, inputs, skip: int = 0, take: int = None) -> Union[Comment, Tuple[Comment, int]]:
+    def parse(self, url, skip: int = 0, take: int = None) -> Union[Comment, Tuple[Comment, int]]:
         pass

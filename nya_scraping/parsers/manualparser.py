@@ -5,17 +5,18 @@ from nya_scraping.parsers.parser import Parser
 
 
 class ManualParser(Parser):
-    def parse(self, inputs, size: bool = False):
+    def parse(self, url, skip: int = 0, take: int = None):
         comment = Comment(
-            text=inputs,
+            text=url,
             author=Author('', ''),
             date=datetime.datetime.now().strftime('Y-m-d')
         )
-
-        if size:
-            return comment, 1
 
         return comment
 
     def setup(self, *args, **kwargs) -> 'Parser':
         return self
+
+    @classmethod
+    def can_parse(cls, url) -> bool:
+        return True

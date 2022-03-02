@@ -3,8 +3,7 @@ from datetime import datetime
 from functools import partial
 from operator import itemgetter
 
-import vk
-
+from nya_scraping.apis.vkapi import VKApi
 from nya_scraping.comment import Comment, Author
 from nya_scraping.parsers.parser import Parser
 from nya_utils.itertools import find
@@ -34,15 +33,14 @@ def _convert_appeals(text):
 
 
 class VKParser(Parser):
-    def __init__(self, app_id=None, login=None, password=None, token=None, api_v=None):
-        if app_id and login and password:
-            self.session = vk.AuthSession(app_id=app_id, user_login=login, user_password=password)
-        elif token:
-            self.session = vk.Session(token)
-        else:
-            self.session = vk.Session()
+    regex = r'wall(-?\d+)_(\d+)'
 
-        self.api = vk.API(self.session, v=api_v, lang='ru')
+    def __init__(self, api: VKApi):
+        self.api = api
+
+    @classmethod
+    def create(cls, *args, **kwargs):
+        return cls(VKApi(*args, **kwargs))
 
     def _extract_comment(self, json_comment, profiles) -> Comment:
         return Comment(
@@ -64,8 +62,9 @@ class VKParser(Parser):
         )
 
     def parse(self, url, skip: int = 0, take: int = None):
-        owner_id, post_id = re.findall(r'wall(-?\d+)_(\d+)', url)[0]
+        return self.parse_id(*re.findall(self.regex, url)[0], skip, take)
 
+    def parse_id(self, owner_id, post_id, skip: int = 0, take: int = None):
         post = self.api.wall.getById(
             posts=[f'{owner_id}_{post_id}'],
             extended=True
@@ -90,3 +89,7 @@ class VKParser(Parser):
         }, profiles=comments['profiles'] + post['groups'])
 
         return comment
+
+    @classmethod
+    def can_parse(cls, url) -> bool:
+        return 'vk.com' in url and re.findall(cls.regex, url)

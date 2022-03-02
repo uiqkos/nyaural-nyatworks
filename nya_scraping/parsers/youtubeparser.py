@@ -14,6 +14,8 @@ munch = DefaultMunch.fromDict
 
 
 class YoutubeParser(Parser):
+    regex = r'v=([\w\-]+)'
+
     def __init__(self, api_v: str, key: str):
         self.api_v = api_v
         self.key = key
@@ -44,8 +46,8 @@ class YoutubeParser(Parser):
 
         return self.parse_comment(thread)
 
-    def parse(self, inputs, skip: int = 0, take: int = None) -> Union[Comment, Tuple[Comment, int]]:
-        video_id = re.findall(r'v=([\w\-]+)', inputs)[0]
+    def parse(self, url, skip: int = 0, take: int = None) -> Union[Comment, Tuple[Comment, int]]:
+        video_id = re.findall(self.regex, url)[0]
 
         request = self.api.videos().list(
             part="snippet",
@@ -95,3 +97,7 @@ class YoutubeParser(Parser):
             page_token = response.nextPageToken
 
         return root
+
+    @classmethod
+    def can_parse(cls, url) -> bool:
+        return 'youtube' in url and re.findall(cls.regex, url)
