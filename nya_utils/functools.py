@@ -15,7 +15,7 @@ def compose(*fs):
 
 def get_item_or(obj, item, default=None, getter=None, astype=None):
     getter = getter or obj.__getitem__
-    astype = astype or (type(default) if default else identity)
+    astype = astype or (type(default) if default is not None else identity)
     if item in obj:
         return astype(getter(item))
-    return astype(default)
+    return default
