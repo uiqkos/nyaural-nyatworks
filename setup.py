@@ -1,16 +1,17 @@
 from setuptools import setup
 
 
+def get_requirements():
+    with open('requirements.txt', 'r') as f:
+        return list(map(str.strip, f.readlines()))
+
+
 if __name__ == '__main__':
-    # todo requirements
     setup(
         name='nyaural_nyatworks',
-        packages=['nya_app', 'nya_ml', 'nya_scraping'],
-        extras_require={
-            'nya_app': [],
-            ...: ...
-        }
+        version='0.1',
+        author='uiqkos',
+        author_email='uiqkos@gmail.com',
+        install_requires=get_requirements(),
+        packages=['nya_app', 'nya_ml', 'nya_ml_research', 'nya_scraping', 'nya_utils'],
     )
-
-
-# ...({...: (_ := ... | ~... ** (_ := [...[::[][:]]][...:(__ := ...):~~....__.__.__]))})
