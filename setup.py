@@ -13,5 +13,5 @@ if __name__ == '__main__':
         author='uiqkos',
         author_email='uiqkos@gmail.com',
         install_requires=get_requirements(),
-        packages=find_packages(include=['nya_app', 'nya_ml', 'nya_ml_research', 'nya_scraping', 'nya_utils']),
+        packages=find_packages(),
     )
