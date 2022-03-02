@@ -2,10 +2,10 @@ from collections import namedtuple
 from dataclasses import dataclass
 from functools import partial
 from itertools import islice
-from operator import methodcaller
+from operator import methodcaller, itemgetter
+from statistics import mean
 from typing import Iterable
 
-from django.http import QueryDict
 from django.shortcuts import render, get_object_or_404
 from django.views.generic import TemplateView, ListView, DetailView
 from rest_framework.response import Response
@@ -15,14 +15,16 @@ from rest_framework.viewsets import ModelViewSet
 from nya_app.config import config
 from nya_app.connectors.comments import iterate_comment_level, LabeledComment, StyledComment
 from nya_app.connectors.modeladapter import ModelAdapterFactory
+from nya_app.connectors.parserfactory import ParserFactory
 from nya_app.nyaural_nyatworks.admin import model_registrar as registrar
 from nya_app.nyaural_nyatworks.models import Model as DBModel
 from nya_app.nyaural_nyatworks.models import Report, Model
-from nya_app.nyaural_nyatworks.serializers import ReportSerializer
-from nya_scraping import parsers
+from nya_app.nyaural_nyatworks.serializers import ReportSerializer, ModelSerializer
 from nya_scraping.comment import map_comment, Comment
+from nya_utils.functools import compose, get_item_or
 
 _model_adapter_factory = ModelAdapterFactory(registrar)
+_parser_factory = ParserFactory(config['parsers'])
 
 
 def handler404(request, exception):
@@ -52,6 +54,11 @@ class ReportViewSet(ModelViewSet):
     serializer_class = ReportSerializer
 
 
+class ModelViewSet(ModelViewSet):
+    queryset = Model.objects.all()
+    serializer_class = ModelSerializer
+
+
 class PredictView(TemplateView):
     template_name = 'predict.html'
     _Group = namedtuple('Group', 'name header models')
@@ -70,9 +77,11 @@ class PredictView(TemplateView):
 @dataclass
 class Paginator:
     objects: Iterable
-    per_page: int
+    per_page: int = -1
 
-    def page(self, number):
+    def page(self, number=1):
+        if self.per_page == -1:
+            return self.objects
         number -= 1
         return islice(self.objects, number * self.per_page, number * self.per_page + self.per_page)
 
@@ -81,32 +90,38 @@ class CommentsView(APIView):
     def get(self, request):
         input_method = request.GET.get('input')
         text = request.GET.get('text')
-        page = int(request.GET.get('page')) if 'page' in request.GET else None
-        styled = bool(request.GET.get('styled')) if 'styled' in request.GET else False
+        page = get_item_or(request.GET, 'page', default=None, astype=int)
+        # page = int(request.GET.get('page')) if 'page' in request.GET else None
+        styled = get_item_or(request.GET, 'styled', default=False)
+        # styled = bool(request.GET.get('styled')) if 'styled' in request.GET else False
+        per_page = get_item_or(request.GET, 'per_page', default=3)
+        # per_page = int(request.GET.get('per_page')) if 'per_page' in request.GET else 3
+        stats = get_item_or(request.GET, 'stats', default=False)
+        # stats = bool(request.GET.get('stats')) if 'stats' in request.GET else False
 
         root = (
-            parsers
-                .get(input_method)
-                .create()
-                .setup(**config['parsers'][input_method])
+            _parser_factory
+                .create(input_method, text)
                 .parse(text)
         )
 
-        targets = config['targets']
+        targets = [
+            target for target in config['targets']
+            if target in request.GET and request.GET.get(target) not in ('', None)
+        ]
         model_by_target = {}
 
         for target in targets:
-            if target in request.GET:
-                db_model = (
-                    DBModel.objects
-                        .filter(local_name=request.GET.get(target))
-                        .first()
-                )
-                model_by_target[target] = _model_adapter_factory.create(db_model).predict
+            db_model = (
+                DBModel.objects
+                    .filter(local_name=request.GET.get(target))
+                    .first()
+            )
+            model_by_target[target] = _model_adapter_factory.create(db_model).predict
 
         if page is not None:
             root = map(
-                partial(LabeledComment, predictors=model_by_target),
+                partial(LabeledComment.from_predictors, predictors=model_by_target),
                 iterate_comment_level(root)
             )
 
@@ -114,63 +129,42 @@ class CommentsView(APIView):
                 root = map(StyledComment, root)
 
             data = map(methodcaller('to_dict'), root)
+            paginator = Paginator(data, per_page if page else -1)
+            items = list(paginator.page(page))
 
-            if page == 0:
-                return Response(data=list(data))
+            if stats:
+                stats = {}
 
-            paginator = Paginator(data, 3)
-            return Response(data=list(paginator.page(page)))
+                for target in targets:
+                    stats[target] = {
+                        key: mean(map(compose(itemgetter(target), itemgetter(key)), items))
+                        for key in items[0][target].keys()
+                    }
+
+                stats = LabeledComment(Comment.empty, **stats)
+                stats = StyledComment(stats)
+                stats = {'styles': stats.styles}
+
+            else:
+                stats = {}
+
+            return Response(data={
+                'items': items,
+                'count': len(items),
+                **stats
+            })
 
         root = map_comment(
-            partial(LabeledComment, predictors=model_by_target),
+            partial(LabeledComment.from_predictors, predictors=model_by_target),
             root
         )
 
         if styled:
             root = map_comment(StyledComment, root)
 
-        return Response(
-            data=root.to_dict()
-        )
-
-
-class MakePredictions(TemplateView):
-    template_name = 'results.html'
-
-    def post(self, request):
-        return self.render_to_response({})
-
-
-class PredictResultsView(ListView):
-    def get(self, request, *args, **kwargs):
-        get = QueryDict('', mutable=True)
-        get.update(request.GET)
-        get['page'] = 0
-        get['styled'] = 1
-        request.GET = get
-        # request.GET = {**request.GET, 'page': 0}
-
-        r = CommentsView().get(request)
-
-        return render(request, 'results.html', context={'comments': r.data})
-
-        # root = get_root_comment(request, generator=True)
-        # root = map(lambda t: (StyledComment.from_predictors(t[0]), t[1]), root)
-        #
-        #
-        #
-        # paginator = Paginator(root, 3)
-        # page = request.GET.get('page') if 'page' in request.GET else 1
-        #
-        # r = render(
-        #     request=request,
-        #     template_name='results.html',
-        #     context={
-        #         'comments': list(paginator.page(page)),
-        #         # 'page': page
-        #     }
-        # )
-        #
-        # return r
-
-    # def post()
+        return Response(data={
+            'items': [root.to_dict()],
+            'pages': 1,
+            'per_page': 1,
+            'found': 1
+        })
