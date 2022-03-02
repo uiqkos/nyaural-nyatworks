@@ -8,6 +8,7 @@
                 id="input" class="nya-a-2 nya-remove-shadow text-center"
                 name="input" v-model="params.input"
             >
+              <option>auto</option>
               <option value="manual">ручной ввод текста</option>
               <option>vk</option>
               <option>twitter</option>
@@ -61,7 +62,7 @@ export default {
   data() {
     return {
       params: {
-        input: 'manual',
+        input: 'auto',
         text: '',
         toxic: null,
         sentiment: null,
