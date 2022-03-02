@@ -5,15 +5,15 @@ from nya_scraping.parsers.parser import Parser
 from nya_scraping.parsers.vkparser import VKParser
 from nya_scraping.parsers.youtubeparser import YoutubeParser
 
-_parsers_by_target = {
+parsers_by_target = {
     'vk': VKParser,
-    'manual': ManualParser,
-    'youtube': YoutubeParser
+    'youtube': YoutubeParser,
+    'manual': ManualParser,  # last
 }
 
 
-def get(target: str) -> Type[Parser]:
-    if target in _parsers_by_target:
-        return _parsers_by_target[target]
+def get(input_method: str) -> Type[Parser]:
+    if input_method in parsers_by_target:
+        return parsers_by_target[input_method]
 
-    return _parsers_by_target['manual']
+    return parsers_by_target['manual']
