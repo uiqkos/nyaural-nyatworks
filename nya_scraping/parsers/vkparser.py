@@ -58,7 +58,8 @@ class VKParser(Parser):
                     partial(self._extract_comment, profiles=profiles),
                     json_comment['thread']['items'] if 'thread' in json_comment
                     else []
-                ))
+                )),
+            id=json_comment['id']
         )
 
     def parse(self, url, skip: int = 0, take: int = None):
@@ -85,7 +86,8 @@ class VKParser(Parser):
             'text': root['text'],
             'from_id': root['from_id'],
             'date': root['date'],
-            'thread': comments
+            'thread': comments,
+            'id': root['id']
         }, profiles=comments['profiles'] + post['groups'])
 
         return comment

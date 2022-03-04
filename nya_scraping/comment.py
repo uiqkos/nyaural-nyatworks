@@ -1,13 +1,14 @@
 from copy import copy
 from dataclasses import field, dataclass, asdict
 from functools import partial
-from typing import List, Callable
+from typing import List, Callable, Any
 
 
-@dataclass
+@dataclass(unsafe_hash=True)
 class Author:
     name: str
     photo: str
+
 
 # todo add likes
 @dataclass
@@ -15,6 +16,7 @@ class Comment:
     text: str
     author: Author = None
     date: str = None
+    id: str = None
 
     comments: List['Comment'] = field(default_factory=list)
 
@@ -25,10 +27,11 @@ class Comment:
 
     @property
     def attributes(self):
-        return ['text', 'author', 'date', 'comments']
+        return ['id', 'text', 'author', 'date', 'comments']
 
     def to_dict(self, comments=True):
         d = {
+            'id': self.id,
             'text': self.text,
             'author': asdict(self.author) if self.author else None,
             'date': self.date
@@ -43,6 +46,10 @@ class Comment:
 
     def __len__(self):
         return 1 + sum(map(len, self.comments))
+    #
+    # @property
+    # def id(self):
+    #     return hash(self.extra)
 
 
 @dataclass
