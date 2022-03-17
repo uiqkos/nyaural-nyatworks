@@ -1,6 +1,6 @@
 import re
 from abc import abstractmethod, ABC
-from typing import Union, Tuple
+from typing import Union, Tuple, Iterator, List
 
 from nya_scraping.comment import Comment
 
@@ -11,5 +11,5 @@ class Parser(ABC):
         return cls(*args, **kwargs)
 
     @abstractmethod
-    def parse(self, url, skip: int = 0, take: int = None) -> Union[Comment, Tuple[Comment, int]]:
+    def parse(self, inputs, expand_path: List[str] = None, *args, **kwargs) -> Iterator[Comment]:
         pass

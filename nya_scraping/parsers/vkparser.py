@@ -2,7 +2,9 @@ import re
 from datetime import datetime
 from functools import partial
 from operator import itemgetter
+from typing import overload, Iterator, List
 
+from nya_app.connectors.comments import CommentOneDim
 from nya_scraping.apis.vkapi import VKApi
 from nya_scraping.comment import Comment, Author
 from nya_scraping.parsers.parser import Parser
@@ -32,6 +34,21 @@ def _convert_appeals(text):
     return re.sub(r'\[(id|club)\w+\|(.*)]', r'\g<2>', text)
 
 
+def _extract_comment(json_comment, profiles) -> Comment:
+    return Comment(
+        text=
+            _convert_appeals(str(json_comment['text'])),
+        author=
+            Author(
+                name=_convert_id_to_name(json_comment['from_id'], profiles),
+                photo=_get_photo_by_id(json_comment['from_id'], profiles)
+            ),
+        date=
+            datetime.fromtimestamp(int(json_comment['date'])).strftime('%Y-%m-%d'),
+        id=str(json_comment['id'])
+    )
+
+
 class VKParser(Parser):
     regex = r'wall(-?\d+)_(\d+)'
 
@@ -42,37 +59,34 @@ class VKParser(Parser):
     def create(cls, *args, **kwargs):
         return cls(VKApi(*args, **kwargs))
 
-    def _extract_comment(self, json_comment, profiles) -> Comment:
-        return Comment(
-            text=
-                _convert_appeals(str(json_comment['text'])),
-            author=
-                Author(
-                    name=_convert_id_to_name(json_comment['from_id'], profiles),
-                    photo=_get_photo_by_id(json_comment['from_id'], profiles)
-                ),
-            date=
-                datetime.fromtimestamp(int(json_comment['date'])).strftime('%Y-%m-%d'),
-            comments=
-                list(map(
-                    partial(self._extract_comment, profiles=profiles),
-                    json_comment['thread']['items'] if 'thread' in json_comment
-                    else []
-                )),
-            id=json_comment['id']
-        )
+    def parse_id(
+        self,
+        owner_id,
+        post_id,
+        post_type,
+        expand_path: List[str] = None,
+        *args, **kwargs
+    ) -> Iterator[Comment]:
+        expand_path = expand_path or []
 
-    def parse(self, url, skip: int = 0, take: int = None):
-        return self.parse_id(*re.findall(self.regex, url)[0], skip, take)
+        if post_type == 'reply':
+            return _extract_comment()
 
-    def parse_id(self, owner_id, post_id, skip: int = 0, take: int = None):
-        post = self.api.wall.getById(
-            posts=[f'{owner_id}_{post_id}'],
-            extended=True
-        )
-        root = post['items'][0]
+        if post_type == 'post':
+            post = self.api.wall.getById(
+                posts=[f'{owner_id}_{post_id}'],
+                extended=True
+            )
+            root = post['items'][0]
 
-        comments = self.api.wall.getComments(
+            root = _extract_comment(root, post['groups'])
+
+            yield CommentOneDim(root, -len(expand_path))
+
+        if not expand_path:
+            return
+
+        comments_response = self.api.wall.getComments(
             owner_id=owner_id,
             post_id=post_id,
             need_likes=True,
@@ -80,17 +94,49 @@ class VKParser(Parser):
             thread_items_count=10
         )
 
-        # print(json.dumps(comments, sort_keys=True, indent=4, ensure_ascii=False))
+        for comment in self.expand(
+            json_comments=comments_response['items'],
+            profiles=comments_response['profiles'] + post['groups'],
+            expand_path=expand_path[1:]
+        ):
+            yield comment
 
-        comment = self._extract_comment({
-            'text': root['text'],
-            'from_id': root['from_id'],
-            'date': root['date'],
-            'thread': comments,
-            'id': root['id']
-        }, profiles=comments['profiles'] + post['groups'])
+    def parse(
+        self,
+        url,
+        expand_path: List[str] = None,
+        *args, **kwargs
+    ) -> Iterator[Comment]:
+        owner_id, post_id = re.findall(self.regex, url)[0]
+        return self.parse_id(owner_id, post_id, 'post', expand_path, *args, **kwargs)
 
-        return comment
+    def expand(
+        self,
+        json_comments,
+        expand_path: List[str] = None,
+        profiles: list = None
+    ):
+        profiles = profiles or []
+
+        for json_comment in json_comments:
+            comment = _extract_comment(json_comment, profiles)
+            comment = CommentOneDim(comment, -len(expand_path))
+
+            if not expand_path:
+                yield comment
+
+            elif comment.id == expand_path[0]:
+                yield comment
+
+                if 'thread' not in json_comment:
+                    return
+
+                for comment in self.expand(
+                    json_comment['thread']['items'],
+                    expand_path[1:],
+                    profiles,
+                ):
+                    yield comment
 
     @classmethod
     def can_parse(cls, url) -> bool:
