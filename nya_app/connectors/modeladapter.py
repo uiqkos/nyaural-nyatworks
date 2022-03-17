@@ -1,4 +1,4 @@
-from nya_app.connectors import Registrar
+from nya_app.connectors.registrar import Registrar
 from nya_ml.models.model import Model
 from nya_scraping.comment import Comment
 

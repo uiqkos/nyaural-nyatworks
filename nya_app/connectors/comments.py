@@ -8,35 +8,16 @@ from nya_utils.functools import compose
 
 @dataclass
 class CommentOneDim(CommentDecorator):
-    comments: int = 0
     level: int = 0
 
     def __init__(self, comment, level=0):
-        super().__init__(comment)
+        super(CommentOneDim, self).__init__(comment)
 
         self.level = level
-        self.comments = len(comment.comments)
 
     @property
     def attributes(self):
         return super(CommentOneDim, self).attributes + ['level']
-
-    def to_dict(self, comments=True):
-        return {
-            **super(CommentOneDim, self).to_dict(False),
-            'comments': self.comments,
-        }
-
-    def __len__(self):
-        return 1 + self.comments
-
-
-def iterate_comment_level(comment: Comment, level=0):
-    yield CommentOneDim(comment, level=level)
-
-    for c1 in comment.comments:
-        for c2 in iterate_comment_level(c1, level=level + 1):
-            yield c2
 
 
 def NoneFactory(*args, **kwargs):
@@ -51,7 +32,7 @@ class LabeledComment(CommentDecorator):
     sarcasm: Dict[str, float] = None
 
     def __init__(self, comment, toxic=None, sentiment=None, sarcasm=None):
-        super().__init__(comment)
+        super(LabeledComment, self).__init__(comment)
 
         self.toxic = toxic
         self.sentiment = sentiment
@@ -93,7 +74,7 @@ class StyledComment(CommentDecorator):
     styles: Dict[str, Dict[str, str]] = field(default_factory=dict)
 
     def __init__(self, comment: LabeledComment):
-        super().__init__(comment)
+        super(StyledComment, self).__init__(comment)
 
         self.styles = {}
         self.__post_init__()
