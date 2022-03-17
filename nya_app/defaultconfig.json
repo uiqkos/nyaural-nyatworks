@@ -8,7 +8,7 @@
       "password": null
     },
     "youtube":  {
-      "key": "AIzaSyBAns3B8z83Zbfs04YxVMHdS5bSo-jlN9w",
+      "key": null,
       "api_v": "v3"
     },
     "manual": {}
