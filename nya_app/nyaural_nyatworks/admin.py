@@ -17,17 +17,17 @@ model_registrar.register(
     target='sentiment',
     save_to_db=True,
     db_name='Random constant'
-)(ConstRandModel)
+)(ConstRandModel('positive'))
 
 model_registrar.register(
     name='const_random', target='toxic',
     save_to_db=True, db_name='Random constant'
-)(ConstRandModel)
+)(ConstRandModel('toxic'))
 
 model_registrar.register(
     name='const_random', target='sarcasm',
     save_to_db=True, db_name='Random constant'
-)(ConstRandModel)
+)(ConstRandModel('sarcasm'))
 
 # ####### RuBert sentiment by blanchefort ####### #
 from nya_ml.models.blanchefort_rubert_sentiment import RuBertSentiment
