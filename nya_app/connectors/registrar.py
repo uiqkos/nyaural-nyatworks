@@ -7,7 +7,7 @@ from nya_ml.models.model import Model
 class Registrar:
     def __init__(self):
         self._registered_models: Dict[str, Type[Model]] = {}
-        self._cashed_models: Dict[str, Type[Model]] = {}
+        self._cashed_models: Dict[str, Model] = {}
 
     def get_model(self, name) -> Model:
         if name in self._cashed_models:
@@ -20,7 +20,7 @@ class Registrar:
         return model
 
     def register(self, name: str, target: str, save_to_db: bool = False, db_name: str = None):
-        local_name = target + '/' + name
+        local_name = target + '_' + name
 
         if save_to_db and not DBModel.objects.filter(local_name=local_name).exists():
             DBModel(
@@ -30,9 +30,9 @@ class Registrar:
                 struct={}
             ).save()
 
-        def wrapper(model_cls: Type[Model]) -> Type[Model]:
-            self._registered_models[local_name] = model_cls
+        def wrapper(model_type: Type[Model]) -> Type[Model]:
+            self._registered_models[local_name] = model_type
 
-            return model_cls
+            return model_type
 
         return wrapper

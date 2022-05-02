@@ -1,5 +1,5 @@
 {
-  "parsers": {
+  "scrapers": {
     "vk": {
       "token": null,
       "api_v": "5.131",
@@ -8,12 +8,11 @@
       "password": null
     },
     "youtube":  {
-      "key": "AIzaSyBAns3B8z83Zbfs04YxVMHdS5bSo-jlN9w",
+      "key": null,
       "api_v": "v3"
     },
     "manual": {}
   },
-
   "targets": [
     "toxic",
     "sentiment",

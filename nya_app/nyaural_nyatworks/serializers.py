@@ -4,6 +4,8 @@ from .models import *
 
 
 class ReportSerializer(serializers.ModelSerializer):
+    tags = serializers.ListField()
+
     class Meta:
         model = Report
         fields = '__all__'
@@ -12,16 +14,4 @@ class ReportSerializer(serializers.ModelSerializer):
 class ModelSerializer(serializers.ModelSerializer):
     class Meta:
         model = Model
-        fields = '__all__'
-
-
-class DatasetSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Dataset
-        fields = '__all__'
-
-
-class TrainSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Train
         fields = '__all__'

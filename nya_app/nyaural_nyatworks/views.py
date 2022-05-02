@@ -1,30 +1,31 @@
-from collections import namedtuple
-from dataclasses import dataclass
+import math
+from dataclasses import dataclass, asdict
 from functools import partial
 from itertools import islice
 from operator import methodcaller, itemgetter
 from statistics import mean
-from typing import Iterable
+from typing import List, Dict
 
-from django.shortcuts import render, get_object_or_404
-from django.views.generic import TemplateView, ListView, DetailView
+import kwargs as kwargs
+from more_itertools import minmax
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
 
 from nya_app.config import config
-from nya_app.connectors.comments import iterate_comment_level, LabeledComment, StyledComment
-from nya_app.connectors.modeladapter import ModelAdapterFactory
-from nya_app.connectors.parserfactory import ParserFactory
+from nya_app.connectors.comments import LabeledComment
+from nya_app.connectors.modeladapterfactory import ModelAdapterFactory
+from nya_app.connectors.scraperfactory import ScraperFactory
 from nya_app.nyaural_nyatworks.admin import model_registrar as registrar
 from nya_app.nyaural_nyatworks.models import Model as DBModel
-from nya_app.nyaural_nyatworks.models import Report, Model
+from nya_app.nyaural_nyatworks.models import Report
 from nya_app.nyaural_nyatworks.serializers import ReportSerializer, ModelSerializer
-from nya_scraping.comment import map_comment, Comment
-from nya_utils.functools import compose, get_item_or
+from nya_scraping.comment import Comment
+from nya_utils.datatools import filter_dataclass_kwargs, cast_arguments, filter_dict
+from nya_utils.functools import compose
 
 _model_adapter_factory = ModelAdapterFactory(registrar)
-_parser_factory = ParserFactory(config['parsers'])
+_scraper_factory = ScraperFactory(config['scrapers'])
 
 
 class ReportViewSet(ModelViewSet):
@@ -33,101 +34,109 @@ class ReportViewSet(ModelViewSet):
 
 
 class ModelViewSet(ModelViewSet):
-    queryset = Model.objects.all()
+    queryset = DBModel.objects.all()
     serializer_class = ModelSerializer
 
 
+@cast_arguments
 @dataclass
-class Paginator:
-    objects: Iterable
-    per_page: int = -1
+class PredictRequestParams:
+    text: str
+    input: str = 'auto'
+    page: int = 0
+    per_page: int = 3
+    styled: bool = False
+    stats: bool = False
+    expand: str = None
+    expand_path: list = None
 
-    def page(self, number=1):
-        if self.per_page == -1:
-            return self.objects
-        number -= 1
-        return islice(self.objects, number * self.per_page, number * self.per_page + self.per_page)
+    def __post_init__(self):
+        if self.expand:
+            self.expand_path = self.expand.removesuffix('/').removeprefix('/').split('/')
+        else:
+            self.expand = ''
 
 
 class CommentsView(APIView):
     def get(self, request):
-        input_method = request.GET.get('input')
-        text = request.GET.get('text')
-        page = get_item_or(request.GET, 'page', default=None, astype=int)
-        # page = int(request.GET.get('page')) if 'page' in request.GET else None
-        styled = get_item_or(request.GET, 'styled', default=False)
-        # styled = bool(request.GET.get('styled')) if 'styled' in request.GET else False
-        per_page = get_item_or(request.GET, 'per_page', default=3)
-        # per_page = int(request.GET.get('per_page')) if 'per_page' in request.GET else 3
-        stats = get_item_or(request.GET, 'stats', default=False)
-        # stats = bool(request.GET.get('stats')) if 'stats' in request.GET else False
+        params_kwargs, extra = filter_dataclass_kwargs(
+            PredictRequestParams, request.GET, return_tuple=True)
 
-        root = (
-            _parser_factory
-                .create(input_method, text)
-                .parse(text)
+        local_name_by_target, create_kwargs = filter_dict(
+            config['targets'], extra, return_tuple=True)
+
+        params = PredictRequestParams(**params_kwargs)
+        scraper = _scraper_factory.create(params.input, params.text, **create_kwargs)
+
+        comments = scraper.get_comments(
+            params.text,
+            path=params.expand_path
         )
 
-        targets = [
-            target for target in config['targets']
-            if target in request.GET and request.GET.get(target) not in ('', None)
-        ]
         model_by_target = {}
+        model_name_by_target = {}
 
-        for target in targets:
+        for target, local_name in local_name_by_target.items():
             db_model = (
                 DBModel.objects
-                    .filter(local_name=request.GET.get(target))
+                    .filter(local_name=local_name)
                     .first()
             )
-            model_by_target[target] = _model_adapter_factory.create(db_model).predict
 
-        if page is not None:
-            root = map(
-                partial(LabeledComment.from_predictors, predictors=model_by_target),
-                iterate_comment_level(root)
-            )
+            if db_model is None:
+                continue
 
-            if styled:
-                root = map(StyledComment, root)
+            model_name_by_target[target] = db_model.local_name
+            model_by_target[target] = _model_adapter_factory.create(db_model)
 
-            data = map(methodcaller('to_dict'), root)
-            paginator = Paginator(data, per_page if page else -1)
-            items = list(paginator.page(page))
-
-            if stats:
-                stats = {}
-
-                for target in targets:
-                    stats[target] = {
-                        key: mean(map(compose(itemgetter(target), itemgetter(key)), items))
-                        for key in items[0][target].keys()
-                    }
-
-                stats = LabeledComment(Comment.empty, **stats)
-                stats = StyledComment(stats)
-                stats = {'styles': stats.styles}
-
-            else:
-                stats = {}
-
-            return Response(data={
-                'items': items,
-                'count': len(items),
-                **stats
-            })
-
-        root = map_comment(
+        comments = map(
             partial(LabeledComment.from_predictors, predictors=model_by_target),
-            root
+            comments
         )
 
-        if styled:
-            root = map_comment(StyledComment, root)
+        comments = map(methodcaller('to_dict'), comments)
 
-        return Response(data={
-            'items': [root.to_dict()],
-            'pages': 1,
-            'per_page': 1,
-            'found': 1
-        })
+        if not params.page:
+            items = list(comments)
+        else:
+            items = list(islice(
+                comments,
+                start := (params.page - 1) * params.per_page,
+                start + params.per_page
+            ))
+
+        stats = params.stats
+
+        if stats:
+            mean_min_max_by_target = {}
+
+            for target in model_by_target.keys():
+                mean_min_max_by_target[target] = {}
+
+                for name in items[0]['predictions'][target].keys():
+                    values = list(map(
+                        compose(
+                            itemgetter('predictions'),
+                            itemgetter(target),
+                            itemgetter(name)
+                        ),
+                        items
+                    ))
+
+                    mean_min_max_by_target[target][name] = {
+                        'mean': mean(values),
+                        **dict(zip(['min', 'max'], minmax(values)))
+                    }
+
+            stats = mean_min_max_by_target
+
+        return Response(data=dict(
+            models=model_name_by_target,
+            grads=dict(map(lambda t: (t[0], t[1].grad), model_by_target.items())),
+            items=items,
+            path=params.expand + '/',
+            per_page=params.per_page,
+            page=params.page,
+            count=len(items),
+            **({'stats': stats} if stats else {})
+        ))

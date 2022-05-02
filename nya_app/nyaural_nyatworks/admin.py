@@ -1,8 +1,8 @@
 # ####### DB models ####### #
 from django.contrib import admin
-from nya_app.nyaural_nyatworks.models import Report, Dataset, Train
+from nya_app.nyaural_nyatworks.models import Report, Model
 
-admin.register(Report, Dataset, Train)
+admin.register(Report, Model)
 
 # ####### ML models ####### #
 from nya_app.connectors.registrar import Registrar
@@ -17,31 +17,39 @@ model_registrar.register(
     target='sentiment',
     save_to_db=True,
     db_name='Random constant'
-)(ConstRandModel('positive'))
+)(ConstRandModel('positive', ('positive', 'negative')))
 
 model_registrar.register(
     name='const_random', target='toxic',
     save_to_db=True, db_name='Random constant'
-)(ConstRandModel('toxic'))
+)(ConstRandModel('toxic', ('toxic', 'no toxic')))
 
 model_registrar.register(
     name='const_random', target='sarcasm',
     save_to_db=True, db_name='Random constant'
-)(ConstRandModel('sarcasm'))
+)(ConstRandModel('sarcasm', ('sarcasm', 'no sarcasm')))
 
 # ####### RuBert sentiment by blanchefort ####### #
-from nya_ml.models.blanchefort_rubert_sentiment import RuBertSentiment
+from nya_ml.models.blanchefort_rubert_sentiment import BlanchefortRuBertSentiment
 
 model_registrar.register(
-    name='blanchefort/rubert-sentiment', target='sentiment',
+    name='blanchefort_rubert_sentiment', target='sentiment',
     save_to_db=True, db_name='RuBert by blanchefort'
-)(RuBertSentiment)
+)(BlanchefortRuBertSentiment)
+
+# ####### RuBert sentiment by Tatyana ####### #
+from nya_ml.models.tatyana_rubert_sentiment import TatyanaRuBertSentiment
+
+model_registrar.register(
+    name='tatyana_rubert_sentiment', target='sentiment',
+    save_to_db=True, db_name='RuBert by Tatyana'
+)(TatyanaRuBertSentiment)
 
 # ####### RuBert toxic by sismetanin ####### #
 from nya_ml.models.sismetanin_rubert_toxic import RuBertToxic
 
 model_registrar.register(
-    name='sismetanin/rubert-toxic', target='toxic',
+    name='sismetanin_rubert_toxic', target='toxic',
     save_to_db=True, db_name='RuBert by sismetanin'
 )(RuBertToxic)
 
@@ -49,6 +57,6 @@ model_registrar.register(
 from nya_ml.models.skolkovoInstitute_russian_toxicity_classifier import RuToxicityClassifier
 
 model_registrar.register(
-    name='SkolkovoInstitute/russian_toxicity_classifier', target='toxic',
+    name='SkolkovoInstitute_russian_toxicity_classifier', target='toxic',
     save_to_db=True, db_name='Russian toxicity classifier by SkolkovoInstitute'
 )(RuToxicityClassifier)
