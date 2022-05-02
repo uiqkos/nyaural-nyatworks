@@ -94,7 +94,7 @@ class Cleaner(BaseEstimator, TransformerMixin):
 
 
 class Splitter(BaseEstimator, TransformerMixin):
-    def __init__(self):  # todo tokenize method
+    def __init__(self):  # todo _tokenize method
         self.tokenizer = RegexpTokenizer(r"[\w\*]+[`']?\w{0,2}")
 
     def fit(self, X, *args, **kwargs):
@@ -124,7 +124,7 @@ class Stemmer(BaseEstimator, TransformerMixin):
         elif stemmer == 'lancaster':
             self.stemmer = LancasterStemmer(*args, **kwargs)
 
-        elif self.stemmer in ('regex', 'regexp', 'r'):
+        elif self.stemmer in ('_regex', 'regexp', 'r'):
             self.stemmer = RegexpStemmer(*args, **kwargs)
 
         else:

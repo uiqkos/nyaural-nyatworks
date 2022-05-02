@@ -1,6 +1,5 @@
 <template>
   <div class="container">
-<!--    <h1 class="nya-text" style="margin-top: 5%">Провести анализ</h1>-->
     <form action="/result">
       <div class="container search" style="position: relative;">
         <div class="row">
@@ -12,6 +11,8 @@
               <option>auto</option>
               <option value="manual">ручной ввод текста</option>
               <option>vk</option>
+              <option>twitter</option>
+              <option>reddit</option>
               <option>youtube</option>
             </select>
 

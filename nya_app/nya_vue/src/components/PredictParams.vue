@@ -10,7 +10,7 @@
       {{ group.header }}
     </a>
 
-    <div :id="group.name" class="collapse container nya-border">
+    <div :id="group.name" class="collapse container" style="border-left: 1px solid #FF8500">
       <div class="accordion-body">
         <div class="row" v-if="group.models.length > 0">
           <div class="col container">
@@ -40,16 +40,15 @@
                       data-bs-html="true"
                       data-bs-placement="top"
                       title=""
-                      v-if="reports.includes(model.local_name)"
                   >
-                    <router-link :to="{'name': 'report', params: {name: model.local_name}}">
+                    <a href="#">
                       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                            class="bi bi-info-circle" viewBox="0 0 16 16">
                         <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"></path>
                         <path
                             d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533L8.93 6.588zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0z"></path>
                       </svg>
-                    </router-link>
+                    </a>
                   </span>
                 </div>
               </label>
@@ -59,6 +58,34 @@
       </div>
     </div>
   </div>
+
+  <div>
+    <a
+        class="nya-remove-shadow nya-a-2 nya-text"
+        style=""
+        data-bs-toggle="collapse"
+        href="#interpreter-container"
+        role="button"
+        aria-expanded="false"
+        aria-controls="interpreter-container">
+      Дополнительные параметры
+    </a>
+
+    <div id="interpreter-container" class="collapse container" style="border-left: 1px solid #FF8500">
+      <div class="accordion-body">
+        <div class="col">
+          <div class="form-check">
+            <input class="form-check-input" type="radio" value="emoji"
+                   name="interpreter" id="flexRadio-emoji">
+            <label class="row form-check-label" for="flexRadio-emoji">
+              <div>перевод в эмодзи 🤬😀</div>
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
 </template>
 
 <script>
@@ -68,7 +95,6 @@ export default {
   name: "PredictParams",
   data() {
     return {
-      models: [],
       groups: [
         {
           name: 'toxic',
@@ -86,7 +112,6 @@ export default {
           models: []
         }
       ],
-      reports: []
     }
   },
   props: {
@@ -94,16 +119,14 @@ export default {
     sentiment: String,
     sarcasm: String
   },
-  async created() {
-    const models = await Api.allModels()
+  created() {
     for (let i = 0; i < this.groups.length; i += 1) {
-      this.groups[i].models = models.filter(m => m.target === this.groups[i].name)
+      Api.allModels().then(
+          value => this.groups[i].models =
+              value.data.filter(m => m.target === this.groups[i].name)
+      )
     }
-
-    const reports = await Api.allReports()
-    for (let report of reports) {
-      this.reports.push(report.name)
-    }
+    console.log(this.groups)
   }
 }
 </script>

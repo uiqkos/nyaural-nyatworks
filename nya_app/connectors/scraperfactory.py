@@ -1,8 +1,4 @@
-from typing import Union, Tuple
-
-from nya_scraping import scrapers
-from nya_scraping.comment import Comment
-from nya_scraping.scrapers import Scraper
+from nya_scraping.scrapers import scrapers
 
 
 class ScraperFactory:
@@ -10,15 +6,9 @@ class ScraperFactory:
         self.config = parsers_config
 
     def create(self, input_method, text, **create_kwargs):
-        if input_method == 'auto':
-            for input_method_, parser in scrapers.parsers_by_target.items():
-                if parser.can_parse(text):
-                    input_method = input_method_
-                    break
-
-        parser_type = scrapers.get(input_method)
-
-        return parser_type.create(**{
-            **self.config[input_method],
-            **create_kwargs
-        })
+        for scraper_type in scrapers:
+            if input_method == 'auto' and scraper_type.can_parse(text) or scraper_type.input_method == input_method:
+                return scraper_type(**{
+                    **self.config[scraper_type.input_method],
+                    **create_kwargs
+                })

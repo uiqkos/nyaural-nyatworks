@@ -14,6 +14,7 @@ class Comment:
     author: Author = None
     date: str = None
     id: str = None
+    comments: int = 0
 
     @property
     def attributes(self):
@@ -24,7 +25,8 @@ class Comment:
             'id': self.id,
             'text': self.text,
             'author': asdict(self.author) if self.author else None,
-            'date': self.date
+            'date': self.date,
+            'comments': self.comments,
         }
 
 
@@ -37,7 +39,7 @@ class CommentDecorator(Comment):
         return self._comment
 
     def __init__(self, comment):
-        self._comment = comment
+        self.__dict__['_comment'] = comment
 
     @property
     def attributes(self):
@@ -45,9 +47,15 @@ class CommentDecorator(Comment):
 
     def __getattribute__(self, item):
         comment = object.__getattribute__(self, '_comment')
-        if item in comment.attributes:
+        if comment is not None and item in comment.attributes:
             return getattr(comment, item)
         return object.__getattribute__(self, item)
+
+    def __setattr__(self, key, value):
+        if self.__dict__['_comment'] is not None and key in self._comment.attributes:
+            setattr(self._comment, key, value)
+        else:
+            self.__dict__[key] = value
 
     def to_dict(self):
         return {
@@ -57,3 +65,17 @@ class CommentDecorator(Comment):
             },
             **self._comment.to_dict()
         }
+
+@dataclass
+class CommentOneDim(CommentDecorator):
+    level: int = 0
+
+    def __init__(self, comment, level=0):
+        super(CommentOneDim, self).__init__(comment)
+
+        self.level = level
+
+    @property
+    def attributes(self):
+        return super(CommentOneDim, self).attributes + ['level']
+

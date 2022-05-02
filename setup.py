@@ -9,7 +9,7 @@ def get_requirements():
 if __name__ == '__main__':
     setup(
         name='nyaural_nyatworks',
-        version='0.1',
+        version='0.2',
         author='uiqkos',
         author_email='uiqkos@gmail.com',
         install_requires=get_requirements(),

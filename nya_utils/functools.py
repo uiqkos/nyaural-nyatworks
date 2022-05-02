@@ -1,5 +1,4 @@
-from functools import reduce
-from operator import itemgetter
+from functools import reduce, wraps
 
 
 def identity(x): return x
@@ -19,3 +18,11 @@ def get_item_or(obj, item, default=None, getter=None, astype=None):
     if item in obj:
         return astype(getter(item))
     return default
+
+
+def ignore_args(f):
+    @wraps(f)
+    def wrapper(*args, **kwargs):
+        return f()
+
+    return wrapper

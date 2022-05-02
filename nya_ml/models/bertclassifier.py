@@ -10,23 +10,31 @@ from nya_ml.models.model import Model
 class BertClassifier(Model, ABC):
     _tokenizer = None
     _model = None
-    _labels = ()
-    _label_grad = ()
+    _grad: dict = None
 
     def __init__(self, tokenizer, model):
         self.tokenizer = tokenizer
         self.model = model
 
+    @property
+    def grad(self):
+        return self._grad
+
     @torch.no_grad()
-    def predict(self, text):
+    def _predict(self, text):
         inputs = self.tokenizer(text, max_length=512, padding=True, truncation=True, return_tensors='pt')
         outputs = self.model(**inputs)
         predicted = torch.softmax(outputs.logits, dim=1)
+        return predicted
+
+    @torch.no_grad()
+    def predict(self, text):
+        predicted = self._predict(text)
         predicted = list(map(lambda t: t.item(), predicted[0]))
         # predicted = predicted[0][self._labels - 1].item()
         return dict(zip(
-            map(self._labels.__getitem__, self._label_grad),
-            map(predicted.__getitem__, self._label_grad)
+            self._grad.keys(),
+            predicted
         ))
 
     @classmethod

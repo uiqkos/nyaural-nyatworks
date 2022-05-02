@@ -46,17 +46,17 @@ model_registrar.register(
 )(TatyanaRuBertSentiment)
 
 # ####### RuBert toxic by sismetanin ####### #
-from nya_ml.models.sismetanin_rubert_toxic import RuBertToxic
+from nya_ml.models.sismetanin_rubert_toxic import SismetaninRuBertToxic
 
 model_registrar.register(
     name='sismetanin_rubert_toxic', target='toxic',
     save_to_db=True, db_name='RuBert by sismetanin'
-)(RuBertToxic)
+)(SismetaninRuBertToxic)
 
 # ####### RuBert toxic by SkolkovoInstitute ####### #
-from nya_ml.models.skolkovoInstitute_russian_toxicity_classifier import RuToxicityClassifier
+from nya_ml.models.skolkovoInstitute_russian_toxicity_classifier import SkolkovoRuToxicityClassifier
 
 model_registrar.register(
     name='SkolkovoInstitute_russian_toxicity_classifier', target='toxic',
     save_to_db=True, db_name='Russian toxicity classifier by SkolkovoInstitute'
-)(RuToxicityClassifier)
+)(SkolkovoRuToxicityClassifier)

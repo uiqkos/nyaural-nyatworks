@@ -26,15 +26,13 @@
       <div class="col-md-6">
         <div class="h-100 p-2">
           <h2 class="nya-text">Рейтинг</h2>
-          <p>Результаты тестирования, на основе которых формируется рейтинг моделей.</p>
+          <p>Ставте лайки и дизлайки, на основе которых формируется рейтинг моделей.</p>
           <router-link to="/rating" class="nya-a-2" type="button">
             просмотреть рейтинг
           </router-link>
         </div>
       </div>
     </div>
-  </div>
-  <div class="container" style="margin: 10%">
   </div>
   <router-view/>
 </template>
