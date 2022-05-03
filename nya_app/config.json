@@ -1,0 +1,21 @@
+{
+  "scrapers": {
+    "vk": {
+      "token": "8a0b455b8a0b455b8a0b455bde8a7053af88a0b8a0b455bebfcaa743838807562edff98",
+      "api_v": "5.131",
+      "app_id": null,
+      "login": null,
+      "password": null
+    },
+    "youtube":  {
+      "key": "AIzaSyBAns3B8z83Zbfs04YxVMHdS5bSo-jlN9w",
+      "api_v": "v3"
+    },
+    "manual": {}
+  },
+  "targets": [
+    "toxic",
+    "sentiment",
+    "sarcasm"
+  ]
+}
