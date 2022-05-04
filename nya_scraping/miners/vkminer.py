@@ -6,7 +6,6 @@ from nya_scraping.apis.vkapi import VKApi
 from nya_scraping.comment import Comment
 from nya_scraping.miners.miner import Miner
 from nya_scraping.scrapers import VKScraper
-from nya_scraping.scrapers.vkscraper import Post
 from nya_utils.datatools import filter_dataclass_kwargs
 
 
@@ -33,7 +32,7 @@ class VKMiner(Miner):
         )
 
         for item in response['items']:
-            for comment in self.scraper.get_comments(Post(**filter_dataclass_kwargs(Post, item))):
+            for comment in self.scraper.get_comments_from_post(item):
                 yield comment
 
         if 'next_from' in response:

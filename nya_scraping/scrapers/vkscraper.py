@@ -98,6 +98,9 @@ class VKScraper(Scraper):
         path = path or []
         post = self.get_post_from_url(url)
 
+        return self.get_comments_from_post(post, path, *args, **kwargs)
+
+    def get_comments_from_post(self, post, path: List[str] = None, *args, **kwargs):
         root = VKScraper._extract_comment(post, post.groups)
 
         if not path:
