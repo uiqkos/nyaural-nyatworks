@@ -1,10 +1,11 @@
 <template>
   <nav class="" style="padding-left: 10%; padding-right: 10%; padding-top: 1%">
     <router-link class="nya-text-header nya-a-1 nya-margin nya-header-md" to="/">Nyaural
-      Nyatworks</router-link>
+      Nyatworks
+    </router-link>
     <router-link class="nya-text nya-a-2 nya-margin nya-header-sm" to="/predict">Анализ</router-link>
     <router-link class="nya-text nya-a-2 nya-margin nya-header-sm" to="/reports">Отчеты</router-link>
-    <router-link class="nya-text nya-a-2 nya-margin nya-header-sm" to="/rating">Рейтинг</router-link>
+    <!--    <router-link class="nya-text nya-a-2 nya-margin nya-header-sm" to="/rating">Рейтинг</router-link>-->
   </nav>
   <router-view/>
 </template>
@@ -12,7 +13,16 @@
 <script>
 
 export default {
-  name: 'App'
+  name: 'App',
+  watch: {
+        $route: {
+            immediate: true,
+            handler(to, from_) {
+              from_
+                document.title = to.meta.title || 'Nyaural Nyatworks';
+            }
+        },
+    }
 }
 
 </script>
@@ -26,6 +36,10 @@ export default {
 .nya-header-md {
   font-size: 30px;
   border-radius: 0
+}
+
+.nya-border {
+  border-left: 1px solid var(--first-color);
 }
 
 .list-group {
@@ -111,24 +125,8 @@ export default {
   text-decoration-color: var(--first-color);
 }
 
-/*.nya-border {*/
-/*    !*border: 3px solid var(--second-color);*!*/
-/*    border: 3px solid var(--first-color);*/
-/*}*/
-
-/*.nya-border-1 {*/
-/*    border: 3px solid var(--first-color);*/
-/*    !*border: 3px solid var(--second-color);*!*/
-/*}*/
-
-/*.nya-border-2 {*/
-/*    border: 3px solid #5A189A;*/
-/*}*/
-
 .logo-box {
-  /*border: 3px solid var(--second-color);*/
   padding-top: 9%;
-  /*padding-bottom: 7%;*/
   margin: 50px;
 }
 
@@ -244,7 +242,7 @@ export default {
 }
 
 .text-block {
-    white-space: pre-line;
+  white-space: pre-line;
 }
 
 </style>
