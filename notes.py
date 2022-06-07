@@ -456,11 +456,11 @@ def main():
     demon_pool = multiprocessing.Pool(2)
     demon_pool.map(methodcaller('f'), [a, r])
     demon_pool.join()
-    demon_pool.close()
+#     demon_pool.close()
+#
+# 123;print();
+#
+#
+# list_classes('src.nya_app.nyaural_nyatworks.models')
 
-123;print();
-
-
-list_classes('src.nya_app.nyaural_nyatworks.models')
-
-
+from collections import Iterable

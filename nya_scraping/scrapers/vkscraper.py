@@ -1,13 +1,14 @@
 import re
 from datetime import datetime
 from operator import itemgetter
-from typing import Iterator, List
+from typing import Iterator, List, Callable, Type
 
 import vk
 from munch import DefaultMunch, Munch
 
-from nya_scraping.comment import Comment, Author, CommentOneDim
+from nya_scraping.comment import Comment, Author, CommentOneDim, RawComment
 from nya_scraping.scrapers.scraper import Scraper
+from nya_utils.datatools import filter_dataclass_kwargs
 from nya_utils.functools import get_item_or
 from nya_utils.itertools import find
 
@@ -21,7 +22,15 @@ class VKScraper(Scraper):
     _regex = r'wall(-?\d+)_(\d+)'
     input_method = 'vk'
 
-    def __init__(self, app_id=None, login=None, password=None, token=None, api_v=None):
+    def __init__(
+        self,
+        app_id=None,
+        login=None,
+        password=None,
+        token=None,
+        api_v=None,
+        extra: bool = False
+    ):
         if app_id and login and password:
             session = vk.AuthSession(app_id=app_id, user_login=login, user_password=password)
         elif token:
@@ -30,6 +39,7 @@ class VKScraper(Scraper):
             session = vk.Session()
 
         self.api = vk.API(session, v=api_v)
+        self.extra = extra
 
     @staticmethod
     def _convert_id_to_name(author, profiles):
@@ -54,8 +64,7 @@ class VKScraper(Scraper):
     def _convert_appeals(text):
         return re.sub(r'\[(id|club)\w+\|(.*)]', r'\g<2>', text)
 
-    @staticmethod
-    def _extract_comment(json_comment, profiles) -> Comment:
+    def _extract_comment(self, json_comment, profiles) -> Comment:
         comments = get_item_or(
             json_comment, 'comments',
             default=get_item_or(
@@ -64,7 +73,7 @@ class VKScraper(Scraper):
             )
         ).get('count')
 
-        return Comment(
+        kwargs = dict(
             text=(json_comment['text'] and VKScraper._convert_appeals(str(json_comment['text']))) +
                  ('attachments' in json_comment) * '<вложение>',
             author=
@@ -77,6 +86,11 @@ class VKScraper(Scraper):
             id=str(json_comment['id']),
             comments=comments
         )
+
+        if self.extra:
+            return RawComment(**{**json_comment, **kwargs})
+
+        return Comment(**kwargs)
 
     @staticmethod
     def get_post_from_json(json_post) -> Munch:
@@ -101,7 +115,7 @@ class VKScraper(Scraper):
         return self.get_comments_from_post(post, path, *args, **kwargs)
 
     def get_comments_from_post(self, post, path: List[str] = None, *args, **kwargs):
-        root = VKScraper._extract_comment(post, post.groups)
+        root = self._extract_comment(post, post.groups)
 
         if not path:
             yield CommentOneDim(root, 0)
@@ -146,7 +160,7 @@ class VKScraper(Scraper):
         profiles = profiles or []
 
         for json_comment in json_comments:
-            comment = VKScraper._extract_comment(json_comment, profiles)
+            comment = self._extract_comment(json_comment, profiles)
             comment = CommentOneDim(comment, level)
 
             if not expand_path:

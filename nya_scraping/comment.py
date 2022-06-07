@@ -1,5 +1,7 @@
 from dataclasses import dataclass, asdict
 
+from nya_utils.datatools import filter_dataclass_kwargs, classproperty
+
 
 @dataclass(unsafe_hash=True)
 class Author:
@@ -7,9 +9,11 @@ class Author:
     photo: str
 
 
-# todo add likes
+# todo add likes, slots
 @dataclass
 class Comment:
+    _attributes = ['id', 'text', 'author', 'date']
+
     text: str
     author: Author = None
     date: str = None
@@ -18,7 +22,7 @@ class Comment:
 
     @property
     def attributes(self):
-        return ['id', 'text', 'author', 'date']
+        return self._attributes
 
     def to_dict(self):
         return {
@@ -79,3 +83,14 @@ class CommentOneDim(CommentDecorator):
     def attributes(self):
         return super(CommentOneDim, self).attributes + ['level']
 
+
+class RawComment(Comment):
+    def __init__(self, **kwargs):
+        comment_kwargs, extra = filter_dataclass_kwargs(Comment, kwargs, return_tuple=True)
+        super(RawComment, self).__init__(**comment_kwargs)
+
+        self.extra = extra
+
+    @property
+    def attributes(self):
+        return super(RawComment, self).attributes + ['extra']

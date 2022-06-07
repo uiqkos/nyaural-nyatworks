@@ -24,19 +24,6 @@ def filter_dict(include: Collection, dct: dict, return_tuple: bool = False):
 
 
 def filter_dataclass_kwargs(dc, dct: dict, return_tuple: bool = False):
-    # kwargs, extra = {}, {}
-    # dc_fields = dict(zip(map(attrgetter('name'), fields(dc)), fields(dc)))
-    #
-    # for key, value in dct.items():
-    #     if key in dc_fields:
-    #         kwargs[key] = value
-    #     else:
-    #         extra[key] = value
-    #
-    # if return_tuple:
-    #     return kwargs, extra
-    #
-    # return kwargs
     return filter_dict(list(map(attrgetter('name'), fields(dc))), dct, return_tuple=return_tuple)
 
 
@@ -76,5 +63,12 @@ def cast_arguments(dc):
     return dc
 
 
+# todo: mb copy
 def supplier(o):
     return lambda *args, **kwargs: o
+
+class classproperty(object):
+    def __init__(self, fget):
+        self.fget = fget
+    def __get__(self, owner_self, owner_cls):
+        return self.fget(owner_cls)

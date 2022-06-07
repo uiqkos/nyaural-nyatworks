@@ -1,0 +1,123 @@
+C:\Users\Uiqkos\pyenv\mint\Scripts\python.exe D:/projects/nyaural_nyatworks/nya_ml_research/src/evaluation/evaluate.py
+Model loaded (cuda: 679 MB)
+before: 711709184
+Model: TatyanaRuBertSentiment Dataset: get_rusentiment
+477it [02:18,  3.44it/s]
+              precision    recall  f1-score   support
+
+           0       0.90      0.79      0.84      8323
+           1       0.80      0.78      0.79      4635
+           2       0.57      0.83      0.68      2294
+
+    accuracy                           0.80     15252
+   macro avg       0.76      0.80      0.77     15252
+weighted avg       0.82      0.80      0.80     15252
+
+after: 711709184
+
+before: 711709184
+Model: TatyanaRuBertSentiment Dataset: get_kaggle_news
+259it [06:19,  1.46s/it]
+              precision    recall  f1-score   support
+
+           0       0.51      0.28      0.36      4034
+           1       0.63      0.11      0.19      2795
+           2       0.22      0.85      0.35      1434
+
+    accuracy                           0.32      8263
+   macro avg       0.45      0.42      0.30      8263
+weighted avg       0.50      0.32      0.30      8263
+
+after: 711709184
+
+Model loaded (cuda: 679 MB)
+before: 711709184
+Model: BlanchefortRuBertSentiment Dataset: get_rusentiment
+477it [02:24,  3.30it/s]
+              precision    recall  f1-score   support
+
+           0       0.94      0.94      0.94      8323
+           1       0.91      0.93      0.92      4635
+           2       0.92      0.85      0.88      2294
+
+    accuracy                           0.93     15252
+   macro avg       0.92      0.91      0.91     15252
+weighted avg       0.93      0.93      0.93     15252
+
+after: 711709184
+
+before: 711709184
+Model: BlanchefortRuBertSentiment Dataset: get_kaggle_news
+259it [06:19,  1.46s/it]
+              precision    recall  f1-score   support
+
+           0       0.49      0.99      0.66      4034
+           1       0.76      0.02      0.04      2795
+           2       0.65      0.01      0.02      1434
+
+    accuracy                           0.49      8263
+   macro avg       0.63      0.34      0.24      8263
+weighted avg       0.61      0.49      0.34      8263
+
+after: 711709184
+
+Model loaded (cuda: 679 MB)
+before: 711706112
+Model: SismetaninRuBertToxic Dataset: get_russian_language_toxic_comments
+451it [04:21,  1.72it/s]
+              precision    recall  f1-score   support
+
+           0       0.97      0.97      0.97      9586
+           1       0.93      0.94      0.93      4826
+
+    accuracy                           0.96     14412
+   macro avg       0.95      0.95      0.95     14412
+weighted avg       0.96      0.96      0.96     14412
+
+after: 711706112
+
+before: 711706112
+Model: SismetaninRuBertToxic Dataset: get_toxic_russian_comments
+7760it [38:09,  3.39it/s]
+              precision    recall  f1-score   support
+
+           0       0.98      0.68      0.81    203685
+           1       0.40      0.94      0.56     44605
+
+    accuracy                           0.73    248290
+   macro avg       0.69      0.81      0.68    248290
+weighted avg       0.88      0.73      0.76    248290
+
+after: 711706112
+
+Model loaded (cuda: 679 MB)
+before: 711706112
+Model: SkolkovoRuToxicityClassifier Dataset: get_russian_language_toxic_comments
+451it [04:11,  1.79it/s]
+              precision    recall  f1-score   support
+
+           0       0.93      0.97      0.95      9586
+           1       0.93      0.86      0.90      4826
+
+    accuracy                           0.93     14412
+   macro avg       0.93      0.92      0.92     14412
+weighted avg       0.93      0.93      0.93     14412
+
+after: 711706112
+
+before: 711706112
+Model: SkolkovoRuToxicityClassifier Dataset: get_toxic_russian_comments
+7760it [36:37,  3.53it/s]
+              precision    recall  f1-score   support
+
+           0       0.99      0.99      0.99    203685
+           1       0.96      0.96      0.96     44605
+
+    accuracy                           0.99    248290
+   macro avg       0.98      0.97      0.98    248290
+weighted avg       0.99      0.99      0.99    248290
+
+after: 711706112
+
+
+Process finished with exit code 0

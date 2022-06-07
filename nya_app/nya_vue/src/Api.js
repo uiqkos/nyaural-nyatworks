@@ -1,5 +1,5 @@
 
-const baseUrl = new URL("http://192.168.1.147:8000")
+const baseUrl = new URL("http://localhost:8000")
 const params = {
   headers: {
     "Content-type": "application/json"

@@ -1,0 +1,38 @@
+[
+  {
+    "text": "тяпнула бы за палец, чтоб руки не распускал",
+    "sismetanin_rubert_toxic": {
+      "toxic": 0.9933136105537415
+    },
+    "SkolkovoInstitute_russian_toxicity_classifier": {
+      "no toxic": 0.83
+    },
+    "true": {
+      "toxic": 1
+    }
+  },
+  {
+    "text": "надюша, спасибо! очень приятно!:)",
+    "sismetanin_rubert_toxic": {
+      "toxic": 0.79
+    },
+    "SkolkovoInstitute_russian_toxicity_classifier": {
+      "no toxic": 0.83
+    },
+    "true": {
+      "no toxic": 1
+    }
+  },
+  {
+    "text": "скажите пожалуйста где взять гуся",
+    "sismetanin_rubert_toxic": {
+      "toxic": 0.81
+    },
+    "SkolkovoInstitute_russian_toxicity_classifier": {
+      "no toxic": 0.99
+    },
+    "true": {
+      "no toxic": 1
+    }
+  }
+]

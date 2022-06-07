@@ -17,3 +17,8 @@ def ConstRandModel(target, labels):
             return {label: self.r for label in self.labels}
 
     return _ConstRandModel
+
+
+sentiment = ConstRandModel('sentiment', ('positive', 'negative'))
+toxic = ConstRandModel('toxic', ('toxic', 'no toxic'))
+sarcasm = ConstRandModel('sarcasm', ('sarcasm', 'no sarcasm'))

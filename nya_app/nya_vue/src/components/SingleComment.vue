@@ -38,19 +38,17 @@ export default {
       text: this.comment.text,
       author: this.comment.author,
       date: this.comment.date,
-      predictions: this.comment.predictions,
       styles: []
     }
   },
   created() {
-    for (let [label, prediction] of Object.entries(this.predictions)) {
+    console.log(this.comment)
+    for (let [label, prediction] of Object.entries(this.comment.predictions)) {
       let predictionKeys = Object.keys(prediction)
       let predictionValues = Object.values(prediction)
       let idx = Utils.argmax(predictionValues)
 
       let grad = this.grads[label][predictionKeys[idx]]
-      console.log(this.grads)
-      console.log(grad)
       let tagType
 
       switch (grad) {

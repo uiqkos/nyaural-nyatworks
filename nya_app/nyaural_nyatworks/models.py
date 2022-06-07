@@ -52,9 +52,7 @@ class Report(DBModel):
 
 class Model(DBModel):
     local_name = TextField(primary_key=True, unique=True)
+    local_path = TextField(null=False)
     name = TextField(null=False)
-    struct = JSONField(null=True)
+    class_name = TextField(null=False)
     target = TextField()
-
-    objects = DjongoManager()
-

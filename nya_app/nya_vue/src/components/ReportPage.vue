@@ -26,9 +26,6 @@ export default {
     const route = useRoute()
     this.report = await Api.reportByName(route.params.name)
 
-    console.log(route)
-    console.log(this.report)
-
     this.html = marked(this.report.text, {
       'baseUrl': Api.baseUrl + 'static/',
     })

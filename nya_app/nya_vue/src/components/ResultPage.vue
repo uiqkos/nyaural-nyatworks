@@ -49,9 +49,6 @@ export default {
     this.rootComment = response.items[0]
     this.grads = response.grads
 
-    console.log(this.rootComment)
-    console.log(this.grads)
-
   },
   methods: {
     nextPage() {

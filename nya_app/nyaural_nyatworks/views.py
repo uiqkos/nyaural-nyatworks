@@ -1,12 +1,9 @@
-import math
-from dataclasses import dataclass, asdict
+from dataclasses import dataclass
 from functools import partial
 from itertools import islice
 from operator import methodcaller, itemgetter
 from statistics import mean
-from typing import List, Dict
 
-import kwargs as kwargs
 from more_itertools import minmax
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -16,15 +13,13 @@ from nya_app.config import config
 from nya_app.connectors.comments import LabeledComment
 from nya_app.connectors.modeladapterfactory import ModelAdapterFactory
 from nya_app.connectors.scraperfactory import ScraperFactory
-from nya_app.nyaural_nyatworks.admin import model_registrar as registrar
 from nya_app.nyaural_nyatworks.models import Model as DBModel
 from nya_app.nyaural_nyatworks.models import Report
 from nya_app.nyaural_nyatworks.serializers import ReportSerializer, ModelSerializer
-from nya_scraping.comment import Comment
 from nya_utils.datatools import filter_dataclass_kwargs, cast_arguments, filter_dict
 from nya_utils.functools import compose
 
-_model_adapter_factory = ModelAdapterFactory(registrar)
+_model_adapter_factory = ModelAdapterFactory()
 _scraper_factory = ScraperFactory(config['scrapers'])
 
 

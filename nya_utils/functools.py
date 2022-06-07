@@ -20,9 +20,9 @@ def get_item_or(obj, item, default=None, getter=None, astype=None):
     return default
 
 
-def ignore_args(f):
+def sliceargs(f, skip=0, take=0):
     @wraps(f)
     def wrapper(*args, **kwargs):
-        return f()
+        return f(*args[skip:take], **kwargs)
 
     return wrapper

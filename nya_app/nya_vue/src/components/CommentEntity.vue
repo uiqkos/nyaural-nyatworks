@@ -66,9 +66,6 @@ export default {
       for (let item of data.items) {
         this.comments.push(item)
       }
-
-      console.log(this.comments)
-
     },
     nextPage() {
       this.requestParams.page += 1

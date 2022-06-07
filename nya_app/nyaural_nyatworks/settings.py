@@ -32,7 +32,6 @@ ALLOWED_HOSTS = ['*', '127.0.0.1', '0.0.0.0', '192.168.98.160']
 INSTALLED_APPS = [
     'nya_app',
     'corsheaders',
-    'django_bootstrap5',
     'rest_framework',
     'django.contrib.admin',
     'django.contrib.auth',

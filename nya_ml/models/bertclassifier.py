@@ -1,4 +1,6 @@
+import gc
 from abc import ABC
+from operator import methodcaller
 
 import torch
 from transformers import AutoModelForSequenceClassification
@@ -12,19 +14,36 @@ class BertClassifier(Model, ABC):
     _model = None
     _grad: dict = None
 
-    def __init__(self, tokenizer, model):
+    def __init__(self, tokenizer, model, device):
         self.tokenizer = tokenizer
-        self.model = model
+        self.model = model.to(device)
+        self.device = device
 
     @property
     def grad(self):
         return self._grad
 
-    @torch.no_grad()
     def _predict(self, text):
-        inputs = self.tokenizer(text, max_length=512, padding=True, truncation=True, return_tensors='pt')
-        outputs = self.model(**inputs)
-        predicted = torch.softmax(outputs.logits, dim=1)
+        with torch.no_grad():
+            inputs = self.tokenizer(text, max_length=512, padding=True, truncation=True, return_tensors='pt')
+
+            tokens_tensor = inputs['input_ids'].to(self.device)
+            token_type_ids = inputs['token_type_ids'].to(self.device)
+            attention_mask = inputs['attention_mask'].to(self.device)
+
+            outputs = self.model(**{
+                'input_ids' : tokens_tensor,
+                'token_type_ids' : token_type_ids,
+                'attention_mask' : attention_mask
+            })
+
+            predicted = torch.softmax(outputs.logits, dim=1)
+
+        predicted = predicted.to('cpu')
+
+        del inputs, tokens_tensor, token_type_ids, attention_mask, outputs
+        gc.collect()
+
         return predicted
 
     @torch.no_grad()
@@ -38,8 +57,8 @@ class BertClassifier(Model, ABC):
         ))
 
     @classmethod
-    def load(cls):
+    def load(cls, device='cpu'):
         tokenizer = BertTokenizerFast.from_pretrained(cls._tokenizer)
         model = AutoModelForSequenceClassification.from_pretrained(cls._model, return_dict=True)
 
-        return cls(tokenizer, model)
+        return cls(tokenizer, model, device)
