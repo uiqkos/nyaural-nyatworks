@@ -1,76 +1,156 @@
-![](nya_app/static/img/logo.png)
+[//]: # (![]&#40;nya_app/nya_vue/public/logo.png&#41;)
+![img.png](img.png)
+# Презентация
+![](res/Nyaural%20Nyatworks%202.1/Nyaural%20Nyatworks%202.1-01.jpg)
+![](res/Nyaural%20Nyatworks%202.1/Nyaural%20Nyatworks%202.1-02.jpg)
+![](res/Nyaural%20Nyatworks%202.1/Nyaural%20Nyatworks%202.1-03.jpg)
+![](res/Nyaural%20Nyatworks%202.1/Nyaural%20Nyatworks%202.1-04.jpg)
+![](res/Nyaural%20Nyatworks%202.1/Nyaural%20Nyatworks%202.1-05.jpg)
+![](res/Nyaural%20Nyatworks%202.1/Nyaural%20Nyatworks%202.1-06.jpg)
+![](res/Nyaural%20Nyatworks%202.1/Nyaural%20Nyatworks%202.1-07.jpg)
+![](res/Nyaural%20Nyatworks%202.1/Nyaural%20Nyatworks%202.1-08.jpg)
+![](res/Nyaural%20Nyatworks%202.1/Nyaural%20Nyatworks%202.1-09.jpg)
+![](res/Nyaural%20Nyatworks%202.1/Nyaural%20Nyatworks%202.1-10.jpg)
+![](res/Nyaural%20Nyatworks%202.1/Nyaural%20Nyatworks%202.1-11.jpg)
+![](res/Nyaural%20Nyatworks%202.1/Nyaural%20Nyatworks%202.1-12.jpg)
+![](res/Nyaural%20Nyatworks%202.1/Nyaural%20Nyatworks%202.1-13.jpg)
+![](res/Nyaural%20Nyatworks%202.1/Nyaural%20Nyatworks%202.1-14.jpg)
+![](res/Nyaural%20Nyatworks%202.1/Nyaural%20Nyatworks%202.1-15.jpg)
+![](res/Nyaural%20Nyatworks%202.1/Nyaural%20Nyatworks%202.1-16.jpg)
+![](res/Nyaural%20Nyatworks%202.1/Nyaural%20Nyatworks%202.1-17.jpg)
+[![](res/Nyaural%20Nyatworks%202.1/Nyaural%20Nyatworks%202.1-18.jpg)](https://youtu.be/uRkytINHSEg)
 
-```
- __   __     __  __     ______     __  __     ______     ______     __              
-/\ "-.\ \   /\ \_\ \   /\  __ \   /\ \/\ \   /\  == \   /\  __ \   /\ \            
-\ \ \-.  \  \ \____ \  \ \  __ \  \ \ \_\ \  \ \  __<   \ \  __ \  \ \ \____      
- \ \_\\"\_\  \/\_____\  \ \_\ \_\  \ \_____\  \ \_\ \_\  \ \_\ \_\  \ \_____\    
-  \/_/ \/_/   \/_____/   \/_/\/_/   \/_____/   \/_/ /_/   \/_/\/_/   \/_____/   
-  __   __     __  __     ______     ______   __     __     ______     ______     __  __     ______
- /\ "-.\ \   /\ \_\ \   /\  __ \   /\__  _\ /\ \  _ \ \   /\  __ \   /\  == \   /\ \/ /    /\  ___\
- \ \ \-.  \  \ \____ \  \ \  __ \  \/_/\ \/ \ \ \/ ".\ \  \ \ \/\ \  \ \  __<   \ \  _"-.  \ \___  \
-  \ \_\\"\_\  \/\_____\  \ \_\ \_\    \ \_\  \ \__/".~\_\  \ \_____\  \ \_\ \_\  \ \_\ \_\  \/\_____\
-   \/_/ \/_/   \/_____/   \/_/\/_/     \/_/   \/_/   \/_/   \/_____/   \/_/ /_/   \/_/\/_/   \/_____/ 
-                                                                                                                                                                                                                                                                                                                                                              
-```                                                                                                                                                                                   
-
-## Api
-### Модели
-
+# Api
+## Модели
 `GET` /models/ - список моделей
-#### Пример ответа
+### Пример ответа
  ```json
 [
   {
-    "local_name": "sentiment/const_random",
-    "name": "Random constant",
-    "struct": "OrderedDict()",
-    "target": "sentiment"
-  }
+        "local_name": "blanchefort_rubert_sentiment",
+        "local_path": "nya_ml.models.blanchefort_rubert_sentiment",
+        "name": "RuBert by blanchefort",
+        "class_name": "BlanchefortRuBertSentiment",
+        "target": "sentiment"
+    },
+    {
+        "local_name": "tatyana_rubert_sentiment",
+        "local_path": "nya_ml.models.tatyana_rubert_sentiment",
+        "name": "RuBert by Tatyana",
+        "class_name": "TatyanaRuBertSentiment",
+        "target": "sentiment"
+    },
+    {
+        "local_name": "sismetanin_rubert_toxic",
+        "local_path": "nya_ml.models.sismetanin_rubert_toxic",
+        "name": "RuBert by sismetanin",
+        "class_name": "SismetaninRuBertToxic",
+        "target": "toxic"
+    }
 ]
 ```
-### Анализ
+## Анализ
 `GET` /predict/
-#### Параметры
+### Параметры
 - **input**: тип ввода (auto, vk, youtube, ...)
 - **text**: что анализировать (текст или ссылка)
+- **expand**: путь ветки сообщений
 - **toxic**: local_name модели анализа токсичности
 - **sentiment**: local_name модели анализа эмоциональности
 - **sarcasm**: local_name модели анализа саркастичности
 - **page**: номер страницы для пагинации (если 0, то все комментарии на одной странице)
 - **per_page**: количество комментариев на странице
-- **styled(временно)**: добавить стили для комментария
-- **stats(временно)**: добавить стили для общей оценки
+- **stats**: статистика по сообщениям
 ### Пример ответа
-page=1&per_page=1
+`GET` /predict/?input=auto&text=https://vk.com/...&toxic=SkolkovoInstitute_russian_toxicity_classifier&sentiment=blanchefort_rubert_sentiment&page=2&per_page=3&expand=7748.../
 ```json
 {
+    "models": {
+        "toxic": "SkolkovoInstitute_russian_toxicity_classifier",
+        "sentiment": "blanchefort_rubert_sentiment"
+    },
+    "grads": {
+        "toxic": {
+            "no toxic": 0,
+            "toxic": 2
+        },
+        "sentiment": {
+            "neutral": 1,
+            "positive": 0,
+            "negative": 2
+        }
+    },
     "items": [
         {
-            "text": "...",
+            "id": "7748....",
+            "text": "Тебя ****?",
             "author": {
-                "name": "...",
+                "name": "Danil...",
                 "photo": "..."
             },
-            "date": "2022-01-31",
-            "level": 0,
-            "sentiment": {
-                "positive": 0.08320649713277817,
-                "neutral": 0.9154757857322693,
-                "negative": 0.0013178198132663965
+            "date": "2022-02-04",
+            "level": 1,
+            "predictions": {
+                "toxic": {
+                    "no toxic": 0.006265629082918167,
+                    "toxic": 0.9937344193458557
+                },
+                "sentiment": {
+                    "neutral": 0.365639865398407,
+                    "positive": 0.002537169959396124,
+                    "negative": 0.631822943687439
+                }
             },
-            "toxic": {
-                "no toxic": 0.5578645467758179,
-                "toxic": 0.44213545322418213
+            "comments": 0
+        },
+        {
+            "id": "77487392",
+            "text": "Кому я обещал?",
+            "author": {
+                "name": "Kirill...",
+                "photo": "..."
             },
-            "sarcasm": null,
-            "comments": 10
+            "date": "2022-02-04",
+            "level": 1,
+            "predictions": {
+                "toxic": {
+                    "no toxic": 0.9088267087936401,
+                    "toxic": 0.09117330610752106
+                },
+                "sentiment": {
+                    "neutral": 0.9958908557891846,
+                    "positive": 0.0015624066581949592,
+                    "negative": 0.0025467220693826675
+                }
+            },
+            "comments": 3
+        },
+        {
+            "id": "77487393",
+            "text": "да сука я только проснулся, админ иди *****",
+            "author": {
+                "name": "Yura...",
+                "photo": "..."
+            },
+            "date": "2022-02-04",
+            "level": 1,
+            "predictions": {
+                "toxic": {
+                    "no toxic": 0.0035801068879663944,
+                    "toxic": 0.9964199066162109
+                },
+                "sentiment": {
+                    "neutral": 0.015688661485910416,
+                    "positive": 0.0017586981412023306,
+                    "negative": 0.9825526475906372
+                }
+            },
+            "comments": 0
         }
     ],
-    "count": 1
+    "path": "7748....//",
+    "per_page": 3,
+    "page": 2,
+    "count": 3
 }
 ```
-### Статьи
-- [Как использовать BERT для мультиклассовой классификации текста](https://neurohive.io/ru/tutorial/bert-klassifikacya-teksta/)
-- [BERT Fine-Tuning Tutorial with PyTorch](https://mccormickml.com/2019/07/22/BERT-fine-tuning/)
-### Датасеты
